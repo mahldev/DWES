@@ -1,4 +1,5 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 
 public class Main {
@@ -45,12 +46,13 @@ public class Main {
         } while (promocion == null);
 
         iva = calcularIVA(baseImponible, porcentIVA);
-        precioConIVA = baseImponible.add(iva);
+        precioConIVA = baseImponible.add(iva).setScale(2, RoundingMode.HALF_EVEN);
         descuento = calcularDescuento(precioConIVA, promocion, eleccion);
-        precioConDescuento = precioConIVA.subtract(descuento);
+        precioConDescuento = precioConIVA.subtract(descuento).setScale(2, RoundingMode.HALF_EVEN);
 
         System.out.printf("%nBase imponible: %.2f%n", baseImponible);
-        System.out.printf("IVA (%.2f%%): %.2f%n", (porcentIVA.multiply(new BigDecimal("100"))), iva);
+        System.out.printf("IVA (%.2f%%): %.2f%n",
+                (porcentIVA.multiply(new BigDecimal("100").setScale(2, RoundingMode.HALF_EVEN))), iva);
         System.out.printf("Precio con IVA: %.2f%n", precioConIVA);
         System.out.printf("Cód. promo. (%s): -%.2f%n", eleccion, descuento);
         System.out.printf("TOTAL: %.2f%n", precioConDescuento);
@@ -61,10 +63,9 @@ public class Main {
     }
 
     private static BigDecimal calcularDescuento(BigDecimal precioConIVA, BigDecimal promocion, String eleccion) {
-        final BigDecimal DESC_MENO5 = new BigDecimal("5.00");
         if (eleccion.equals("meno5")) {
-            return DESC_MENO5;
+            return promocion;
         }
-        return precioConIVA.multiply(promocion);
+        return precioConIVA.multiply(promocion).setScale(2, RoundingMode.HALF_EVEN);
     }
 }
