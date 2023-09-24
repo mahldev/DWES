@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class OperableTest {
 
-    Operable<Integer> calculadora = new Operable<Integer>() {
+    Operable<Integer> operable = new Operable<Integer>() {
 
         private Integer valor = 5;
 
@@ -36,28 +36,28 @@ public class OperableTest {
     @Test
     @DisplayName("sumaTest")
     void sumaTest() {
-        assertEquals(10, calculadora.suma(5));
-        assertNotEquals(5, calculadora.suma(5));
+        assertEquals(10, operable.suma(5));
+        assertNotEquals(5, operable.suma(5));
     }
 
     @Test
     @DisplayName("restaTest")
     void restaTest() {
-        assertEquals(0, calculadora.resta(5));
-        assertNotEquals(5, calculadora.resta(5));
+        assertEquals(0, operable.resta(5));
+        assertNotEquals(5, operable.resta(5));
     }
 
     @Test
     @DisplayName("multiplicacionTest")
     void multiplicacionTest() {
-        assertEquals(25, calculadora.multiplicacion(5));
-        assertNotEquals(10, calculadora.multiplicacion(5));
+        assertEquals(25, operable.multiplicacion(5));
+        assertNotEquals(10, operable.multiplicacion(5));
     }
 
     @Test
     @DisplayName("divisionTest")
     void divisionTest() {
-        assertEquals(1, calculadora.division(5));
-        assertNotEquals(10, calculadora.division(5));
+        assertEquals(1, operable.division(5));
+        assertNotEquals(10, operable.division(5));
     }
 }
