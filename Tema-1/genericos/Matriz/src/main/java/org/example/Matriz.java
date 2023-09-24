@@ -41,11 +41,16 @@ public class Matriz<T> {
         return this.NUM_FILAS;
     }
 
+    private String format(String str1, String str2) {
+        return str1 + "\n" + str2;
+    }
+
     @Override
     public String toString() {
         return matriz.stream()
-                .map(t -> t.toString() + "\n")
-                .reduce((t, u) -> t + u)
+                .map(Celda::toString)
+                .reduce(this::format)
                 .orElse("Vacio");
     }
+
 }

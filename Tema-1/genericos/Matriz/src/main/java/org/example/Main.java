@@ -11,7 +11,7 @@ public class Main {
         celda = matriz.get(1, 2);
 
         System.out.println(matriz.toString());
-        System.out.println(celda);
+        System.out.println("\n" + celda);
     }
 
     private static void rellenaMatriz(Matriz<Integer> matriz) {
