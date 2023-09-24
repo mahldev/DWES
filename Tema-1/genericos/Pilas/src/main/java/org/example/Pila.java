@@ -38,9 +38,15 @@ public class Pila<T> implements ColeccionSimpleGenerica<T> {
         return list.add(e);
     }
 
+    private String format(String str1, String str2) {
+        return str1 + " " + str2;
+    }
+
     @Override
     public String toString() {
         return list.stream()
-                .toString();
+                .map(T::toString)
+                .reduce(this::format)
+                .orElse("Vacia");
     }
 }
