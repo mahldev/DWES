@@ -24,9 +24,9 @@ public class Main {
 
         baseImponible = new BigDecimal(EntradaTeclado.pedirDouble("Introduzca la base imponible: "));
         do {
-            if (error) {
-                System.out.println("No se encuentra ese tipo de iva, intenlo de nuevo");
-            }
+            if (error) 
+                System.out.println("No se encuentra ese tipo de iva, intentelo de nuevo");
+
             porcentIVA = ivas
                     .get(EntradaTeclado.pedirCadena("Introduzca el tipo de IVA (general, reducido o superreducido): ")
                             .toLowerCase());
@@ -36,9 +36,9 @@ public class Main {
         error = false;
 
         do {
-            if (error) {
-                System.out.println("No se encuentra esta promoción, intenlo de nuevo");
-            }
+            if (error)
+                System.out.println("No se encuentra esta promoción, intentelo de nuevo");
+
             promocion = promociones.get(eleccion = EntradaTeclado
                     .pedirCadena("Introduzca el código promocional (nopro, mitad, meno5 o 5porc): ")
                     .toLowerCase());
@@ -50,12 +50,19 @@ public class Main {
         descuento = calcularDescuento(precioConIVA, promocion, eleccion);
         precioConDescuento = precioConIVA.subtract(descuento).setScale(2, RoundingMode.HALF_EVEN);
 
+<<<<<<< HEAD
+        System.out.printf("%nBase imponible: %.2f%n", baseImponible.setScale(2, RoundingMode.HALF_EVEN));
+        System.out.printf("IVA (%.2f%%): %.2f%n",
+                (porcentIVA.multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_EVEN)), iva);
+        System.out.printf("Precio con IVA: %.2f%n", precioConIVA.setScale(2, RoundingMode.HALF_EVEN));
+=======
         System.out.printf("%nBase imponible: %.2f%n", baseImponible);
         System.out.printf("IVA (%.2f%%): %.2f%n",
                 (porcentIVA.multiply(new BigDecimal("100").setScale(2, RoundingMode.HALF_EVEN))), iva);
         System.out.printf("Precio con IVA: %.2f%n", precioConIVA);
+>>>>>>> f3d5b25e23cfc8df80da4c288ad118caf886b9be
         System.out.printf("Cód. promo. (%s): -%.2f%n", eleccion, descuento);
-        System.out.printf("TOTAL: %.2f%n", precioConDescuento);
+        System.out.printf("TOTAL: %.2f%n", precioConDescuento.setScale(2, RoundingMode.HALF_EVEN));
     }
 
     private static BigDecimal calcularIVA(BigDecimal baseImponible, BigDecimal iva) {
@@ -63,9 +70,16 @@ public class Main {
     }
 
     private static BigDecimal calcularDescuento(BigDecimal precioConIVA, BigDecimal promocion, String eleccion) {
+<<<<<<< HEAD
+        if (eleccion.equals("meno5")) 
+            return promocion;
+        
+        return precioConIVA.multiply(promocion);
+=======
         if (eleccion.equals("meno5")) {
             return promocion;
         }
         return precioConIVA.multiply(promocion).setScale(2, RoundingMode.HALF_EVEN);
+>>>>>>> f3d5b25e23cfc8df80da4c288ad118caf886b9be
     }
 }
