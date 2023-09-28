@@ -11,5 +11,7 @@ public @interface Tecnico {
 
     Empleado value();
 
+    int codigoTaller();
+
     String perfil();
 }

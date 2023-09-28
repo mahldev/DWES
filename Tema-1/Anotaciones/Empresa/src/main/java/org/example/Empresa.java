@@ -27,14 +27,28 @@ public class Empresa {
         Empleados empleados = empresaClass.getAnnotation(annotations.Empleados.class);
 
         if (empleados != null) {
-            for (annotations.Empleado empleado : empleados.empleados()) {
-                switch (empleado.clase()) {
-                    case "Directivo" -> empresa.add(new Directivo(empleado.dni(), empleado.nombre(),
-                            empleado.apellidos(), empleado.codigoDespacho()));
-                    case "Tecnico" -> empresa.add(new Tecnico(empleado.dni(), empleado.nombre(),
-                            empleado.apellidos(), empleado.codigoTaller(), empleado.perfil()));
-                    case "Oficial" -> empresa.add(new Oficial(empleado.dni(), empleado.nombre(),
-                            empleado.apellidos(), empleado.codigoTaller(), empleado.categoria()));
+            for (annotations.Empleado e : empleados.empleados()) {
+                switch (e.clase().toLowerCase()) {
+                    case "directivo" -> empresa.add(
+                            new Directivo(
+                                    e.dni(),
+                                    e.nombre(),
+                                    e.apellidos(),
+                                    e.codigoDespacho()));
+                    case "tecnico" -> empresa.add(
+                            new Tecnico(
+                                    e.dni(),
+                                    e.nombre(),
+                                    e.apellidos(),
+                                    e.codigoTaller(),
+                                    e.perfil()));
+                    case "oficial" -> empresa.add(
+                            new Oficial(
+                                    e.dni(),
+                                    e.nombre(),
+                                    e.apellidos(),
+                                    e.codigoTaller(),
+                                    e.categoria()));
                 }
             }
         }
@@ -58,7 +72,7 @@ public class Empresa {
     public String toString() {
         return empleados.stream()
                 .map(org.example.Empleado::toString)
-                .reduce((s1, s2) -> s1 + " " + s2)
+                .reduce((s1, s2) -> s1 + "\n" + s2)
                 .orElse("Vacio");
     }
 }

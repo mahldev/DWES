@@ -38,6 +38,6 @@ public abstract class Empleado {
 
     @Override
     public String toString() {
-        return "Empleado [nombre=" + nombre + ", apellidos=" + apellidos + ", dni=" + dni;
+        return this.getClass().getSimpleName() + "Nombre: " + nombre + " - Apellidos: " + apellidos + " - DNI: " + dni;
     }
 }

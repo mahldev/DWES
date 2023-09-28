@@ -17,11 +17,11 @@ public @interface Empleado {
 
     String apellidos();
 
-    int codigoDespacho() default 0;
+    int codigoDespacho() default -1;
 
     String perfil() default "";
 
-    int codigoTaller() default 0;
+    int codigoTaller() default -1;
 
     String categoria() default "";
 }

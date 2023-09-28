@@ -17,20 +17,12 @@ public class Pila<T> implements ColeccionSimpleGenerica<T> {
 
     @Override
     public T extraer() {
-        if (list.isEmpty())
-            return null;
-
-        T res = list.get(list.size() - 1);
-        list.remove(res);
-        return res;
+        return list.removeLast();
     }
 
     @Override
     public T primero() {
-        if (list.isEmpty())
-            return null;
-
-        return list.get(list.size() - 1);
+        return list.getLast();
     }
 
     @Override

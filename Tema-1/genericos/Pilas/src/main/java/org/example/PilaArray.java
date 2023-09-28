@@ -17,9 +17,6 @@ public class PilaArray<T> implements ColeccionSimpleGenerica<T> {
 
     @Override
     public T extraer() {
-        if (estaVacia())
-            return null;
-
         T res = array[numeroElementos - 1];
         numeroElementos--;
         return res;
@@ -27,9 +24,6 @@ public class PilaArray<T> implements ColeccionSimpleGenerica<T> {
 
     @Override
     public T primero() {
-        if (estaVacia())
-            return null;
-
         return array[numeroElementos - 1];
     }
 

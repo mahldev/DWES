@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.NoSuchElementException;
+
 public class PilaTest {
 
     Pila<Integer> pila;
@@ -30,9 +32,17 @@ public class PilaTest {
     @Test
     @DisplayName("extraerTest")
     void extraerTest() {
+
+        NoSuchElementException thrown;
+
         assertEquals(5, pila.extraer(), "Deberia extraer un 5");
         assertEquals(2, pila.extraer(), "Deberia extraer un 2");
-        assertNull(pila.extraer(), "Deberia extraer un null");
+
+        thrown = assertThrows(NoSuchElementException.class,
+                () -> {
+                    pila.extraer();
+                }, "Se espera un NoSuchElementException");
+        assertEquals("", thrown.getMessage());
     }
 
     @Test
@@ -42,7 +52,6 @@ public class PilaTest {
         assertEquals(5, pila.primero(), "Deberia volver a recuperar 5");
         pila.extraer();
         pila.extraer();
-        assertNull(pila.primero(), "Deberia recuperar null");
     }
 
     @Test

@@ -19,7 +19,7 @@ public class Tecnico extends Operario {
 
     @Override
     public String toString() {
-        return super.toString() + "Tecnico [perfil=" + perfil + "]";
+        return super.toString() + " - Perfil: " + perfil;
     }
 
 }

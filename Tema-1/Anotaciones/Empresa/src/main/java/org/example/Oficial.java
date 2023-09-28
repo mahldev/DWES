@@ -19,6 +19,6 @@ public class Oficial extends Operario {
 
     @Override
     public String toString() {
-        return super.toString() + "Oficial [categoria=" + categoria + "]";
+        return super.toString() + " - Categoria: " + categoria;
     }
 }
