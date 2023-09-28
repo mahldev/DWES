@@ -38,6 +38,8 @@ public abstract class Empleado {
 
     @Override
     public String toString() {
-        return "Empleado [nombre=" + nombre + ", apellidos=" + apellidos + ", dni=" + dni;
+        String nombreDeLaClase = getClass().getSimpleName();
+
+        return String.format("%s - Dni: %s - Nombre: %s - Apellidos: %s", nombreDeLaClase, dni, nombre, apellidos);
     }
 }

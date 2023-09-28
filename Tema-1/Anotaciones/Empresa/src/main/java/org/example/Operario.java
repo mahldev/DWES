@@ -19,6 +19,6 @@ public class Operario extends Empleado {
 
     @Override
     public String toString() {
-        return super.toString() + " - Codigo Taller: " + codigoTaller;
+        return String.format("%s - Codigo Taller: %d", super.toString(), codigoTaller);
     }
 }

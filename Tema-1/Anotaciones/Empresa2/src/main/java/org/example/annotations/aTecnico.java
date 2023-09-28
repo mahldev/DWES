@@ -7,11 +7,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Oficial {
+public @interface aTecnico {
 
-    Empleado value();
+    aEmpleado value();
 
     int codigoTaller();
 
-    String categoria();
+    String perfil();
 }

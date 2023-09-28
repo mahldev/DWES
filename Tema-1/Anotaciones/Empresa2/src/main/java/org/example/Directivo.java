@@ -19,7 +19,7 @@ public class Directivo extends Empleado {
 
     @Override
     public String toString() {
-        return super.toString() + "Directivo [codigoDespacho=" + codigoDespacho + "]";
+        return String.format("%s - Codigo Despacho: %d", super.toString(), codigoDespacho);
     }
 
 }

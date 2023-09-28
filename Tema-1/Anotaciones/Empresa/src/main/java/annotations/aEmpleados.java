@@ -7,4 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Empleados { Empleado[] empleados(); }
+public @interface aEmpleados {
+    aEmpleado[] value();
+}

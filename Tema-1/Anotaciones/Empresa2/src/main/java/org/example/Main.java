@@ -6,6 +6,5 @@ public class Main {
 
         Empresa empresa = Empresa.cargadorDeContexto("Mi Empresa");
         System.out.println(empresa);
-
     }
 }

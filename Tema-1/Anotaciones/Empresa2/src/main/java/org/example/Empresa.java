@@ -1,83 +1,75 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.example.annotations.Directivo;
-import org.example.annotations.Empleado;
-import org.example.annotations.Oficial;
-import org.example.annotations.Tecnico;
+import org.example.annotations.aDirectivo;
+import org.example.annotations.aEmpleado;
+import org.example.annotations.aOficial;
+import org.example.annotations.aTecnico;
 
-@Directivo(value = @Empleado(dni = "1", nombre = "1", apellidos = "1"), codigoDespacho = 1)
-@Tecnico(value = @Empleado(dni = "2", nombre = "2", apellidos = "2"), codigoTaller = 2, perfil = "2")
-@Oficial(value = @Empleado(dni = "3", nombre = "3", apellidos = "3"), codigoTaller = 3, categoria = "3")
+@aDirectivo(value = @aEmpleado(dni = "1", nombre = "1", apellidos = "1"), codigoDespacho = 1)
+@aTecnico(value = @aEmpleado(dni = "2", nombre = "2", apellidos = "2"), codigoTaller = 2, perfil = "2")
+@aOficial(value = @aEmpleado(dni = "3", nombre = "3", apellidos = "3"), codigoTaller = 3, categoria = "3")
 public class Empresa {
 
-    private String nombre;
-    private List<org.example.Empleado> empleados;
+        private String nombre;
 
-    public Empresa(String nombre) {
-        this.empleados = new ArrayList<>();
-        this.nombre = nombre;
-    }
+        private List<org.example.Empleado> empleados;
 
-    public static Empresa cargadorDeContexto(String nombre) {
-        Empresa empresa = new Empresa(nombre);
-        Class<Empresa> empresaClass = Empresa.class;
+        public Empresa(String nombre) {
+                this.empleados = new ArrayList<>();
+                this.nombre = nombre;
+        }
 
-        List<org.example.annotations.Directivo> directivos = Arrays.asList(empresaClass
-                .getAnnotationsByType(org.example.annotations.Directivo.class));
-        List<org.example.annotations.Tecnico> tecnicos = Arrays.asList(empresaClass
-                .getAnnotationsByType(org.example.annotations.Tecnico.class));
-        List<org.example.annotations.Oficial> oficiales = Arrays.asList(empresaClass
-                .getAnnotationsByType(org.example.annotations.Oficial.class));
+        public String getNombre() {
+                return nombre;
+        }
 
-        directivos.stream()
-                .map(d -> new org.example.Directivo(
-                        d.value().dni(),
-                        d.value().nombre(),
-                        d.value().apellidos(),
-                        d.codigoDespacho()))
-                .forEach(d -> empresa.add(d));
+        public void setNombre(String nombre) {
+                this.nombre = nombre;
+        }
 
-        tecnicos.stream()
-                .map(t -> new org.example.Tecnico(
-                        t.value().dni(),
-                        t.value().nombre(),
-                        t.value().apellidos(),
-                        t.codigoTaller(),
-                        t.perfil()))
-                .forEach(t -> empresa.add(t));
+        public <T extends Empleado> boolean add(T e) {
+                return empleados.add(e);
+        }
 
-        oficiales.stream()
-                .map(o -> new org.example.Oficial(
-                        o.value().dni(),
-                        o.value().nombre(),
-                        o.value().apellidos(),
-                        o.codigoTaller(),
-                        o.categoria()))
-                .forEach(o -> empresa.add(o));
-        return empresa;
-    }
+        public static Empresa cargadorDeContexto(String nombre) {
+                Empresa empresa = new Empresa(nombre);
 
-    public <T extends org.example.Empleado> boolean add(T e) {
-        return empleados.add(e);
-    }
+                cargarDirectivos(empresa);
+                cargarTecnicos(empresa);
+                cargarOficiales(empresa);
 
-    public String getNombre() {
-        return nombre;
-    }
+                return empresa;
+        }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+        private static void cargarOficiales(Empresa empresa) {
+                List<aOficial> oficiales = Utils.recuperaAnotaciones(aOficial.class);
+                oficiales.stream()
+                                .map(Utils::crearOficial)
+                                .forEach(empresa::add);
+        }
 
-    @Override
-    public String toString() {
-        return empleados.stream()
-                .map(org.example.Empleado::toString)
-                .reduce((s1, s2) -> s1 + " " + s2)
-                .orElse("Vacio");
-    }
+        private static void cargarTecnicos(Empresa empresa) {
+                List<aTecnico> tecnicos = Utils.recuperaAnotaciones(aTecnico.class);
+                tecnicos.stream()
+                                .map(Utils::crearTecnico)
+                                .forEach(empresa::add);
+        }
+
+        private static void cargarDirectivos(Empresa empresa) {
+                List<aDirectivo> directivos = Utils.recuperaAnotaciones(aDirectivo.class);
+                directivos.stream()
+                                .map(Utils::crearDirectivo)
+                                .forEach(empresa::add);
+        }
+
+        @Override
+        public String toString() {
+                return empleados.stream()
+                                .map(Empleado::toString)
+                                .collect(Collectors.joining("\n", "", empleados.isEmpty() ? "Vacio" : ""));
+        }
 }
