@@ -15,7 +15,6 @@ import org.example.annotations.aTecnico;
 public class Empresa {
 
         private String nombre;
-
         private List<org.example.Empleado> empleados;
 
         public Empresa(String nombre) {
@@ -70,6 +69,7 @@ public class Empresa {
         public String toString() {
                 return empleados.stream()
                                 .map(Empleado::toString)
-                                .collect(Collectors.joining("\n", "", empleados.isEmpty() ? "Vacio" : ""));
+                                .collect(Collectors.joining("\n", "",
+                                                empleados.isEmpty() ? "Vacio" : ""));
         }
 }
