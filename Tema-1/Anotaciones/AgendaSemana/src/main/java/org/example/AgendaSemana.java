@@ -1,8 +1,6 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.example.annotations.aTarea;
@@ -23,10 +21,11 @@ public class AgendaSemana {
     }
 
     public Tarea get(String titulo) {
-        return tareas.stream()
-                .filter(t -> t.getTitulo().equals(titulo))
-                .findFirst()
-                .orElse(null);
+        Optional<Tarea> tarea = tareas.stream()
+                .filter(t -> Objects.equals(t.getTitulo(), titulo))
+                .findFirst();
+
+        return tarea.orElse(null);
     }
 
     public static AgendaSemana cargadorAgendaSemana() {
@@ -55,5 +54,4 @@ public class AgendaSemana {
                 .map(Tarea::toString)
                 .collect(Collectors.joining("\n", "", tareas.isEmpty() ? "Vacio" : ""));
     }
-
 }
