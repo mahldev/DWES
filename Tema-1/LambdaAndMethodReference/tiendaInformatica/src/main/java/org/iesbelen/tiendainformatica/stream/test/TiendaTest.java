@@ -702,7 +702,7 @@ class TiendaTest {
             List<Producto> listProd = productosDAOImpl.findAll();
 
             listProd.stream()
-                    .filter(producto -> producto.getFabricante().getNombre().equals("Crucial")
+                    .filter(producto -> producto.getFabricante().getNombre().equalsIgnoreCase("Crucial")
                             && producto.getPrecio() > 200)
                     .forEach(System.out::println);
 
@@ -1011,7 +1011,11 @@ class TiendaTest {
 
             List<Producto> listProd = productosDAOImpl.findAll();
 
-            // TODO STREAMS
+            listProd.stream()
+                    .filter(producto -> producto.getNombre().equalsIgnoreCase("Asus"))
+                    .mapToDouble(Producto::getPrecio)
+                    .average()
+                    .ifPresent(System.out::println);
 
         } catch (RuntimeException e) {
             productosDAOImpl.rollbackTransaction();
