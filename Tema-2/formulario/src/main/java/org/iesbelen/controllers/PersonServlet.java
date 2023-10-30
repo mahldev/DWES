@@ -8,10 +8,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.iesbelen.entitys.Person;
 
 import java.io.IOException;
+import java.util.Map;
 
 @WebServlet(name = "person-servlet", value = "/person")
 public class PersonServlet extends HttpServlet {
 
+    private Map<String, String> validatePerson(String name,
+                                         String surnnames,
+                                         Integer age,
+                                         Integer weight,
+                                         String gender,
+                                         String maritalStatus,
+                                         String[] hobbies) {
+
+
+    }
     private Person createAPersonfromRequest(HttpServletRequest req) {
         final String name = req.getParameter("name");
         final String surnames = req.getParameter("surnames");
@@ -20,6 +31,7 @@ public class PersonServlet extends HttpServlet {
         final String gender = req.getParameter("gender");
         final String maritalStatus = req.getParameter("marital");
         final String[] hobbies = req.getParameterValues("hobbies");
+
 
         return new Person(name, surnames, age, weight, gender, maritalStatus, hobbies);
     }

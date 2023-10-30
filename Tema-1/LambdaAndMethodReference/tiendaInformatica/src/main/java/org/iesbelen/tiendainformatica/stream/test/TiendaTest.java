@@ -1,6 +1,7 @@
 package org.iesbelen.tiendainformatica.stream.test;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -10,6 +11,7 @@ import org.iesbelen.tiendainformatica.entity.Producto;
 import org.iesbelen.tiendainformatica.dao.ProductoDAOImpl;
 import org.junit.jupiter.api.Test;
 
+import static java.lang.String.format;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -747,10 +749,10 @@ class TiendaTest {
      * <p>
      * Producto Precio Fabricante
      * -----------------------------------------------------
-     * GeForce GTX 1080 Xtreme|611.5500000000001 |Crucial
-     * Portátil Yoga 520 |452.79 |Lenovo
-     * Portátil Ideapd 320 |359.64000000000004|Lenovo
-     * Monitor 27 LED Full HD |199.25190000000003|Asus
+     * GeForce GTX 1080 Xtreme |611.5500000000001  |Crucial
+     * Portátil Yoga 520       |452.79             |Lenovo
+     * Portátil Ideapd 320     |359.64000000000004 |Lenovo
+     * Monitor 27 LED Full HD  |199.25190000000003 |Asus
      */
     @Test
     void test27() {
@@ -760,7 +762,28 @@ class TiendaTest {
 
             List<Producto> listProd = productosDAOImpl.findAll();
 
-            // TODO STREAMS
+            Function<Producto, StringBuilder> myFormat = (producto) -> {
+                StringBuilder res = new StringBuilder();
+
+                res.append(format("%-30s",producto.getNombre())).append("|")
+                        .append(producto.getPrecio()).append(" |")
+                        .append(producto.getFabricante().getNombre());
+                return res;
+            };
+
+            List<StringBuilder> res = listProd.stream()
+                    .filter(producto -> producto.getPrecio() >= 180)
+                    .sorted(comparing(Producto::getPrecio).reversed()
+                            .thenComparing(Producto::getNombre))
+                    .map(myFormat)
+                    .toList();
+
+
+            System.out.printf("%-30s %-30s %-30s%n", "Producto", "Precio", "Fabricante");
+            res.forEach(System.out::println);
+
+
+
 
         } catch (RuntimeException e) {
             productosDAOImpl.rollbackTransaction();

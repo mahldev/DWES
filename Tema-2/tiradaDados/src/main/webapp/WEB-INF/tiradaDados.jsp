@@ -10,16 +10,18 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Ordenar dados</h1>
-<p>Actualice la página para mostrar una nueva tirada.</p>
-<h2>Tirada de <%=numeroDados%> dados</h2>
+    <h1>Ordenar dados</h1>
+    <p>Actualice la página para mostrar una nueva tirada.</p>
+    <h2>Tirada de <%=numeroDados%> dados</h2>
 <%for (Integer dado : listaDados) { %>
-<img src="./imgDados/<%=dado%>.svg">
+    <img src="./imgDados/<%=dado%>.svg">
 <%} %>
 
-<h2>Tirada ordenada</h2>
+    <h2>Tirada ordenada</h2>
+
 <%for (Integer dado : listaDadosOrdenada) { %>
-<img src="./imgDados/<%=dado%>.svg">
+    <img src="./imgDados/<%=dado%>.svg">
 <%} %>
+
 </body>
 </html>
