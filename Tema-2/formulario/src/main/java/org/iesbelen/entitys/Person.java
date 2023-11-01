@@ -1,28 +1,46 @@
 package org.iesbelen.entitys;
 
-import java.util.Arrays;
+import jakarta.servlet.http.HttpServletRequest;
+import org.iesbelen.utils.CreationPersonResult;
+import org.iesbelen.utils.ValidateResult;
+import org.iesbelen.utils.ValidationError;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Person {
 
     private String name;
-    private String surnnames;
+    private String surnames;
     private Integer age;
     private Integer weight;
     private String gender;
     private String maritalStatus;
-    private String[] hobbies;
+    private Set<String> hobbies;
 
-    public Person(String name, String surnnames, Integer age,
+
+    public Person() {
+        this.name = "";
+        this.surnames = "";
+        this.age = 0;
+        this.weight = 0;
+        this.gender = "";
+        this.maritalStatus = "";
+        this.hobbies = new HashSet<>();
+    }
+
+    public Person(String name, String surnames, Integer age,
                   Integer weight, String gender, String maritalStatus,
-                  String[] hobbies) {
+                  Set<String> hobbies) {
         this.name = name;
-        this.surnnames = surnnames;
+        this.surnames = surnames;
         this.age = age;
         this.weight = weight;
         this.gender = gender;
         this.maritalStatus = maritalStatus;
         this.hobbies = hobbies;
     }
+
 
     public String getName() {
         return name;
@@ -33,11 +51,11 @@ public class Person {
     }
 
     public String getSurnnames() {
-        return surnnames;
+        return surnames;
     }
 
     public void setSurnnames(String surnnames) {
-        this.surnnames = surnnames;
+        this.surnames = surnnames;
     }
 
     public Integer getAge() {
@@ -72,12 +90,87 @@ public class Person {
         this.maritalStatus = maritalStatus;
     }
 
-    public String[] getHobbies() {
+    public Set<String> getHobbies() {
         return hobbies;
     }
 
-    public void setHobbies(String[] hobbies) {
+    public void setHobbies(Set<String> hobbies) {
         this.hobbies = hobbies;
+    }
+
+    private static String getParameterOrDefault(HttpServletRequest req, String paramName) {
+        String value = req.getParameter(paramName);
+        return value != null ? value : "";
+    }
+
+    private static Integer getIntegerParameterOrDefault(HttpServletRequest req, String paramName) {
+        String value = req.getParameter(paramName);
+        return value != null && !value.isEmpty() ? Integer.parseInt(value) : 0;
+    }
+
+    private static Set<String> getParameterValuesOrDefault(HttpServletRequest req, String paramName, Set<String> defaultValue) {
+        String[] values = req.getParameterValues(paramName);
+        return values != null ? Set.of(values) : defaultValue;
+    }
+
+    public static CreationPersonResult createPersonResultFromRequest(HttpServletRequest req) {
+        final String name = getParameterOrDefault(req, "name");
+        final String surnames = getParameterOrDefault(req, "surnames");
+        final Integer age = getIntegerParameterOrDefault(req, "age");
+        final Integer weight = getIntegerParameterOrDefault(req, "weight");
+        final String gender = getParameterOrDefault(req, "gender");
+        final String maritalStatus = getParameterOrDefault(req, "marital");
+        final Set<String> hobbies = getParameterValuesOrDefault(req, "hobbies", new HashSet<>());
+
+        final ValidateResult validateResult = validate(
+                name, surnames, age, weight, gender, maritalStatus, hobbies);
+
+        return new CreationPersonResult(new Person(
+                name, surnames, age, weight, gender, maritalStatus, hobbies),
+                validateResult);
+    }
+
+    public static ValidateResult validate(String name,
+                                          String surnames,
+                                          Integer age,
+                                          Integer weight,
+                                          String gender,
+                                          String maritalStatus,
+                                          Set<String> hobbies) {
+
+        final var validateResult = new ValidateResult();
+
+        if (name == null || name.isEmpty()) {
+            validateResult.addResult("name", ValidationError.NAME_REQUIRED);
+        }
+
+        if (surnames == null || surnames.isEmpty()) {
+            validateResult.addResult("surnames", ValidationError.SURNAMES_REQUIRED);
+        }
+
+        if (age == null || age < 0) {
+            validateResult.addResult("age", ValidationError.INVALID_AGE);
+        }
+
+        if (weight == null || weight < 0) {
+            validateResult.addResult("weight", ValidationError.INVALID_WEIGHT);
+        }
+
+        if ((!"Male".equals(gender) && !"Female".equals(gender))) {
+            validateResult.addResult("gender", ValidationError.INVALID_GENDER);
+        }
+
+        if ((!"Single".equals(maritalStatus)
+                && !"Married".equals(maritalStatus)
+                && !"Other".equals(maritalStatus))) {
+            validateResult.addResult("maritalStatus", ValidationError.INVALID_MARITAL_STATUS);
+        }
+
+        if (hobbies == null || hobbies.isEmpty()) {
+            validateResult.addResult("hobbies ", ValidationError.NO_HOBBIES_SELECTED);
+        }
+
+        return validateResult;
     }
 
     @Override
@@ -85,12 +178,12 @@ public class Person {
         return String.format("Nombre: %s - Apellidos: %s - Edad: %d " +
                         "- Peso: %d - Sexo: %s - Estado Civil: %s - Aficiones: %s",
                 name,
-                surnnames,
+                surnames,
                 age,
                 weight,
                 gender,
                 maritalStatus,
-                Arrays.toString(hobbies)
+                hobbies.toString()
         );
     }
 }

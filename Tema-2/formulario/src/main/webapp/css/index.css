@@ -24,6 +24,7 @@ body {
 main {
   margin-top: 2em;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -90,4 +91,8 @@ button:active {
   transition: none;
   background-color: #005cc8;
   color: #fff;
+}
+
+.error-message {
+  font-weight: bold;
 }
