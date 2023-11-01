@@ -16,7 +16,7 @@ public class PersonServlet extends HttpServlet {
             throws ServletException, IOException {
         final var creationPersonResult = Person.createPersonResultFromRequest(req);
 
-        if (creationPersonResult.getErrors().isValid()) {
+        if (creationPersonResult.isValid()) {
             forwardToPage(req, res,
                     "./WEB-INF/showDataPerson.jsp",
                     "person",

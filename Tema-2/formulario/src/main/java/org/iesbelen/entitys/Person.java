@@ -2,7 +2,7 @@ package org.iesbelen.entitys;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.iesbelen.utils.CreationPersonResult;
-import org.iesbelen.utils.ValidateResult;
+import org.iesbelen.utils.ValidationResult;
 import org.iesbelen.utils.ValidationError;
 
 import java.util.HashSet;
@@ -122,52 +122,52 @@ public class Person {
         final String maritalStatus = getParameterOrDefault(req, "marital");
         final Set<String> hobbies = getParameterValuesOrDefault(req, "hobbies", new HashSet<>());
 
-        final ValidateResult validateResult = validate(
+        final ValidationResult validateResult = validate(
                 name, surnames, age, weight, gender, maritalStatus, hobbies);
 
-        return new CreationPersonResult(new Person(
-                name, surnames, age, weight, gender, maritalStatus, hobbies),
+        return new CreationPersonResult(
+                new Person(name, surnames, age, weight, gender, maritalStatus, hobbies),
                 validateResult);
     }
 
-    public static ValidateResult validate(String name,
-                                          String surnames,
-                                          Integer age,
-                                          Integer weight,
-                                          String gender,
-                                          String maritalStatus,
-                                          Set<String> hobbies) {
+    public static ValidationResult validate(String name,
+                                            String surnames,
+                                            Integer age,
+                                            Integer weight,
+                                            String gender,
+                                            String maritalStatus,
+                                            Set<String> hobbies) {
 
-        final var validateResult = new ValidateResult();
+        final var validateResult = new ValidationResult();
 
         if (name == null || name.isEmpty()) {
-            validateResult.addResult("name", ValidationError.NAME_REQUIRED);
+            validateResult.addError("name", ValidationError.NAME_REQUIRED);
         }
 
         if (surnames == null || surnames.isEmpty()) {
-            validateResult.addResult("surnames", ValidationError.SURNAMES_REQUIRED);
+            validateResult.addError("surnames", ValidationError.SURNAMES_REQUIRED);
         }
 
         if (age == null || age < 0) {
-            validateResult.addResult("age", ValidationError.INVALID_AGE);
+            validateResult.addError("age", ValidationError.INVALID_AGE);
         }
 
         if (weight == null || weight < 0) {
-            validateResult.addResult("weight", ValidationError.INVALID_WEIGHT);
+            validateResult.addError("weight", ValidationError.INVALID_WEIGHT);
         }
 
         if ((!"Male".equals(gender) && !"Female".equals(gender))) {
-            validateResult.addResult("gender", ValidationError.INVALID_GENDER);
+            validateResult.addError("gender", ValidationError.INVALID_GENDER);
         }
 
         if ((!"Single".equals(maritalStatus)
                 && !"Married".equals(maritalStatus)
                 && !"Other".equals(maritalStatus))) {
-            validateResult.addResult("maritalStatus", ValidationError.INVALID_MARITAL_STATUS);
+            validateResult.addError("maritalStatus", ValidationError.INVALID_MARITAL_STATUS);
         }
 
         if (hobbies == null || hobbies.isEmpty()) {
-            validateResult.addResult("hobbies ", ValidationError.NO_HOBBIES_SELECTED);
+            validateResult.addError("hobbies ", ValidationError.NO_HOBBIES_SELECTED);
         }
 
         return validateResult;

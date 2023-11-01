@@ -1,5 +1,5 @@
 <%@ page import="org.iesbelen.utils.CreationPersonResult" %>
-<%@ page import="org.iesbelen.utils.ValidateResult" %>
+<%@ page import="org.iesbelen.utils.ValidationResult" %>
 <%@ page import="org.iesbelen.entitys.Person" %>
 <%@ page import="org.iesbelen.utils.ValidationError" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
@@ -7,7 +7,7 @@
     var creationResult = (CreationPersonResult) request.getAttribute("creationResult");
     creationResult = (creationResult == null) ? new CreationPersonResult(new Person()) : creationResult;
     var person = creationResult.getPerson();
-    ValidateResult resultErrors = creationResult.getErrors();
+    ValidationResult resultErrors = creationResult.getErrors();
 %>
 <html>
 

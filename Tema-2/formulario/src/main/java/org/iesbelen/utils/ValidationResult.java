@@ -3,11 +3,11 @@ package org.iesbelen.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ValidateResult {
+public class ValidationResult {
 
     private final Map<String, ValidationError> errors;
 
-    public ValidateResult() {
+    public ValidationResult() {
         this.errors = new HashMap<>();
     }
 
@@ -15,7 +15,7 @@ public class ValidateResult {
         return errors.isEmpty();
     }
 
-    public void addResult(String key, ValidationError value) {
+    public void addError(String key, ValidationError value) {
         errors.put(key, value);
     }
 
