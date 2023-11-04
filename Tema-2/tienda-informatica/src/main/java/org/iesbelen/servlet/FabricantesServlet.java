@@ -42,10 +42,8 @@ public class FabricantesServlet extends HttpServlet {
             List<FabricanteDTO> listFabDTO = fabDAO.getAll()
                     .stream()
                     .map(fabricante -> {
-                        Optional<Integer> productCount = fabDAO.getCountProductos(fabricante.getIdFabricante());
-                        return FabricanteDTO.crearFabricanteDTOdeFabricante(
-                                fabricante,
-                                productCount.isPresent() ? productCount.get() : 0);
+                        int cantidadProductos = fabDAO.getCountProductos(fabricante.getIdFabricante()).orElse(0);
+                        return FabricanteDTO.crearFabricanteDTOdeFabricante(fabricante, cantidadProductos);
                     })
                     .toList();
 
@@ -78,8 +76,15 @@ public class FabricantesServlet extends HttpServlet {
                 FabricanteDAO fabDAO = new FabricanteDAOImpl();
                 // GET
                 // /fabricantes/{id}
+                final int idFabricante = Integer.parseInt(pathParts[1]);
+                final Optional<Fabricante> fabricante = fabDAO.find(idFabricante);
+                final Optional<Integer> cantidadProductos = fabDAO.getCountProductos(idFabricante);
+
+                final Optional<FabricanteDTO> fabricanteDTO = fabricante.map(fab ->
+                        FabricanteDTO.crearFabricanteDTOdeFabricante(fab, cantidadProductos.orElse(0)));
+
                 try {
-                    request.setAttribute("fabricante", fabDAO.find(Integer.parseInt(pathParts[1])));
+                    request.setAttribute("fabricante", fabricanteDTO);
                     dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/fabricantes/detalle-fabricante.jsp");
 
                 } catch (NumberFormatException nfe) {
