@@ -1,21 +1,78 @@
+<%@ page import="static org.iesbelen.utils.HTMLGenerator.getProductoHTML" %>
 <%@ page import="org.iesbelen.model.Producto" %>
 <%@ page import="java.util.Optional" %>
-<%@ page import="static org.iesbelen.utils.HTMLGenerator.getProductoHTML" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
 <% Optional<Producto> producto = (Optional<Producto>) request.getAttribute("producto");%>
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>detalles producto</title>
+
     <style>
-        :root {margin: 0; padding: 0; box-sizing: border-box}
-        body { max-width: 1000px; margin: 0 auto; }
-        main { display: flex; justify-content: center; align-items: center; margin-top: 2em; }
-        .producto { display: flex; flex-direction: column; gap: .5em; }
+        :root {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            width: 100%;
+            margin-top: .5em;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+            border-bottom: solid 2px rgb(128, 128, 128);
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            margin-top: 1em;
+        }
+
+        .productos {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: .5em; 
+        }
+        
+        input {
+            max-width: 177px;
+        }
+
     </style>
 </head>
+
 <body>
+
+    <header>
+        <h1>Detalle Producto</h1>
+        <form action="${pageContext.request.contextPath}/tienda/productos/">
+            <button>Volver</button>
+        </form>
+    </header>
+
     <main>
-        <%= getProductoHTML(producto)%>
+       <%= getProductoHTML(producto)%>
     </main>
 </body>
+
 </html>

@@ -39,13 +39,17 @@ public class FabricantesServlet extends HttpServlet {
 
         if (pathInfo == null || "/".equals(pathInfo)) {
             FabricanteDAO fabDAO = new FabricanteDAOImpl();
-            List<FabricanteDTO> listFabDTO = fabDAO.getAll()
+
+            /* OBLIGATORIO
+           List<FabricanteDTO> listFabDTO = fabDAO.getAll()
                     .stream()
                     .map(fabricante -> {
                         int cantidadProductos = fabDAO.getCountProductos(fabricante.getIdFabricante()).orElse(0);
                         return FabricanteDTO.crearFabricanteDTOdeFabricante(fabricante, cantidadProductos);
                     })
-                    .toList();
+                    .toList(); */
+
+            List<FabricanteDTO> listFabDTO = fabDAO.getAllDTOPlusCountProductos();
 
             //GET
             //	/fabricantes/

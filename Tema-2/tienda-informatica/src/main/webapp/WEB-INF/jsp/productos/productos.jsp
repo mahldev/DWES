@@ -18,7 +18,6 @@
 	</style>
 </head>
 <body>
-<body>
 
 	<div id="contenedora" style="float:none; margin: 0 auto;width: 900px;" >
 		<div class="clearfix">
@@ -80,6 +79,5 @@
 		No hay registros de producto
 	<% } %>
 	</div>
-</body>
 </body>
 </html>

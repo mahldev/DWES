@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.iesbelen.model.Fabricante;
+import org.iesbelen.model.FabricanteDTO;
+
+import static org.iesbelen.model.FabricanteDTO.crearFabricanteDTOdeFabricante;
 
 public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO {
 
@@ -82,9 +85,7 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
                 listFab.add(fab);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             closeDb(conn, s, rs);
@@ -200,14 +201,14 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
     }
 
     @Override
-    public Optional<Integer> getCountProductos(int id) {
+    public Optional<Integer> getCountProductos(int idFabricante) {
 
         String sql = "SELECT COUNT(*) FROM `tienda`.`productos` WHERE idFabricante = ?";
         Optional<Integer> count = Optional.empty();
 
         try (Connection conn = connectDB();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
+            ps.setInt(1, idFabricante);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) count = Optional.of(rs.getInt(1));
@@ -217,5 +218,40 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
             e.printStackTrace();
         }
         return count;
+    }
+
+    @Override
+    public List<FabricanteDTO> getAllDTOPlusCountProductos() {
+
+        List<FabricanteDTO> listFabDTO = new ArrayList<>();
+        String sql = """
+                    SELECT f.idFabricante, f.nombre, count(p.idProducto)
+                    FROM fabricantes f
+                    LEFT OUTER JOIN productos p
+                    USING(idFabricante)
+                    GROUP BY idFabricante;
+                    """;
+
+
+        try (Connection conn = connectDB();
+             Statement s = conn.createStatement();
+             ResultSet rs = s.executeQuery(sql)) {
+
+            while (rs.next()) {
+                int numeroProductos;
+                Fabricante fab = new Fabricante();
+
+                fab.setIdFabricante(rs.getInt(1));
+                fab.setNombre(rs.getString(2));
+                numeroProductos = rs.getInt(3);
+
+                listFabDTO.add(crearFabricanteDTOdeFabricante(fab, numeroProductos));
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return listFabDTO;
     }
 }
