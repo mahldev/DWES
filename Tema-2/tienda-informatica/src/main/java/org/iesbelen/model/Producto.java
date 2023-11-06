@@ -1,6 +1,10 @@
 package org.iesbelen.model;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.iesbelen.util.ResultadoDeCreacion;
+import org.iesbelen.util.ResultadoDeValidacion;
+
 public class Producto {
 
     private int idProducto;
@@ -38,6 +42,29 @@ public class Producto {
 
     public void setCodigo_fabricante(int codigo_fabricante) {
         this.codigo_fabricante = codigo_fabricante;
+    }
+
+    public static ResultadoDeValidacion validar(String nombre,
+                                                Double precio) {
+        ResultadoDeValidacion validaciones = new ResultadoDeValidacion();
+
+        if (nombre == null || nombre.trim().isBlank()) {
+            validaciones.addError("nombre", "El nombre del producto no puede estar vacío.");
+        }
+
+        else if (nombre.length() < 3 || nombre.length() > 50) {
+            validaciones.addError("nombre", "El nombre del producto debe tener entre 3 y 50 caracteres.");
+        }
+
+        if (precio <= 0) {
+            validaciones.addError("precio", "El precio del producto debe ser mayor que 0.");
+        }
+
+        if (precio > 10000) {
+            validaciones.addError("precio", "El precio del producto no puede exceder los 10000.");
+        }
+
+        return validaciones;
     }
 
     @Override

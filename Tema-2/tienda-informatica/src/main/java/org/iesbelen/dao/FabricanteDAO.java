@@ -14,6 +14,8 @@ public interface FabricanteDAO {
 
     public Optional<Fabricante> find(int id);
 
+    public Optional<Fabricante> findByName(String nombre);
+
     public void update(Fabricante fabricante);
 
     public void delete(int id);

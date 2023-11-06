@@ -1,4 +1,4 @@
-<%@ page import="static org.iesbelen.utils.HTMLGenerator.getProductoHTML" %>
+<%@ page import="static org.iesbelen.util.HTMLGenerator.getProductoHTML" %>
 <%@ page import="org.iesbelen.model.Producto" %>
 <%@ page import="java.util.Optional" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"

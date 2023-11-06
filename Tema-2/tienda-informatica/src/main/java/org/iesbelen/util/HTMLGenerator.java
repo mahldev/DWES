@@ -1,4 +1,4 @@
-package org.iesbelen.utils;
+package org.iesbelen.util;
 
 import org.iesbelen.model.Producto;
 

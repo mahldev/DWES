@@ -135,6 +135,30 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
 
     }
 
+    @Override
+    public Optional<Fabricante> findByName(String nombre) {
+        String sql = "SELECT * FROM fabricantes WHERE nombre = ?";
+
+
+        try (Connection conn = connectDB();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Fabricante fab = new Fabricante();
+                    fab.setIdFabricante(rs.getInt(1));
+                    fab.setNombre(rs.getString(2));
+                    return Optional.of(fab);
+                }
+            }
+
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return Optional.empty();
+    }
+
     /**
      * Actualiza fabricante con campos del bean fabricante según ID del mismo.
      */
@@ -225,12 +249,12 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
 
         List<FabricanteDTO> listFabDTO = new ArrayList<>();
         String sql = """
-                    SELECT f.idFabricante, f.nombre, count(p.idProducto)
-                    FROM fabricantes f
-                    LEFT OUTER JOIN productos p
-                    USING(idFabricante)
-                    GROUP BY idFabricante;
-                    """;
+                SELECT f.idFabricante, f.nombre, count(p.idProducto)
+                FROM fabricantes f
+                LEFT OUTER JOIN productos p
+                USING(idFabricante)
+                GROUP BY idFabricante;
+                """;
 
 
         try (Connection conn = connectDB();

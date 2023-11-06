@@ -60,7 +60,7 @@
 			<div style="float: left;width: 20%"><%= producto.getPrecio()%></div>
 			<div style="float: none;width: auto;overflow: hidden;">
 				<form action="${pageContext.request.contextPath}/tienda/productos/<%= producto.getIdProducto()%>" style="display: inline;">
-    				<input type="submit" value="Ver Detalle" />
+    				<input type="submit" value="Ver Detalles" />
 				</form>
 				<form action="${pageContext.request.contextPath}/tienda/productos/editar/<%= producto.getIdProducto()%>" style="display: inline;">
     				<input type="submit" value="Editar" />
