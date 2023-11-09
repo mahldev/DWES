@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@page import="org.iesbelen.model.Fabricante"%>
 <%@page import="java.util.List"%>
-<%@ page import="org.iesbelen.model.FabricanteDTO" %>
+<%@ page import="org.iesbelen.dto.FabricanteDTO" %>
 
 <!DOCTYPE html>
 <html>
