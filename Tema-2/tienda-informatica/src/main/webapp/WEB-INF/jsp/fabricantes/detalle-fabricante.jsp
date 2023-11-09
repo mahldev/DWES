@@ -1,7 +1,7 @@
+<%@ page import="org.iesbelen.model.FabricanteDTO" %>
+<%@ page import="java.util.Optional" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@page import="java.util.Optional"%>
-<%@ page import="org.iesbelen.dto.FabricanteDTO" %>
+		 pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>

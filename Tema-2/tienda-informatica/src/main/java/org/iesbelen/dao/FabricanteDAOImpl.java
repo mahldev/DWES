@@ -245,29 +245,29 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
     }
 
     @Override
-    public List<FabricanteDTO> getAllDTOPlusCountProductos() {
-
+    public List<FabricanteDTO> getAllDTOPlusCountProductos(String ordPor, String ascDesc) {
         List<FabricanteDTO> listFabDTO = new ArrayList<>();
-        String sql = """
-                SELECT f.idFabricante, f.nombre, count(p.idProducto)
-                FROM fabricantes f
-                LEFT OUTER JOIN productos p
-                USING(idFabricante)
-                GROUP BY idFabricante;
-                """;
 
+        String dirOrde = "desc".equals(ascDesc) ? "DESC" : "ASC";
+        String sql = """
+             SELECT f.idFabricante as 'codigo', f.nombre, count(p.idProducto)
+             FROM fabricantes f
+             LEFT OUTER JOIN productos p
+             USING(idFabricante)
+             GROUP BY f.idFabricante
+             ORDER BY %s %s
+             """.formatted(ordPor, dirOrde);
 
         try (Connection conn = connectDB();
-             Statement s = conn.createStatement();
-             ResultSet rs = s.executeQuery(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                int numeroProductos;
                 Fabricante fab = new Fabricante();
 
                 fab.setIdFabricante(rs.getInt(1));
                 fab.setNombre(rs.getString(2));
-                numeroProductos = rs.getInt(3);
+                int numeroProductos = rs.getInt(3);
 
                 listFabDTO.add(crearFabricanteDTOdeFabricante(fab, numeroProductos));
             }
@@ -278,4 +278,5 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
 
         return listFabDTO;
     }
+
 }

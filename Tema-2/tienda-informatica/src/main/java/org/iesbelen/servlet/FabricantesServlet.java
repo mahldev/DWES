@@ -2,6 +2,7 @@ package org.iesbelen.servlet;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import jakarta.servlet.RequestDispatcher;
@@ -15,6 +16,7 @@ import org.iesbelen.dao.FabricanteDAO;
 import org.iesbelen.dao.FabricanteDAOImpl;
 import org.iesbelen.model.Fabricante;
 import org.iesbelen.model.FabricanteDTO;
+import org.iesbelen.util.HTTPRequestUtil;
 
 @WebServlet(name = "fabricantesServlet", value = "/tienda/fabricantes/*")
 public class FabricantesServlet extends HttpServlet {
@@ -40,16 +42,11 @@ public class FabricantesServlet extends HttpServlet {
         if (pathInfo == null || "/".equals(pathInfo)) {
             FabricanteDAO fabDAO = new FabricanteDAOImpl();
 
-            /* OBLIGATORIO
-           List<FabricanteDTO> listFabDTO = fabDAO.getAll()
-                    .stream()
-                    .map(fabricante -> {
-                        int cantidadProductos = fabDAO.getCountProductos(fabricante.getIdFabricante()).orElse(0);
-                        return FabricanteDTO.crearFabricanteDTOdeFabricante(fabricante, cantidadProductos);
-                    })
-                    .toList(); */
+            String ordPor = request.getParameter("ordenar-por");
+            String ascDesc = request.getParameter("modo-ordenar");
 
-            List<FabricanteDTO> listFabDTO = fabDAO.getAllDTOPlusCountProductos();
+            if (Objects.isNull(ordPor)) { ordPor = "codigo"; }
+            List<FabricanteDTO> listFabDTO = fabDAO.getAllDTOPlusCountProductos(ordPor, ascDesc);
 
             //GET
             //	/fabricantes/

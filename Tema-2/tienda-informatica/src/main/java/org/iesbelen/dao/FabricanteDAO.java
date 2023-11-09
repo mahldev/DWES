@@ -22,5 +22,5 @@ public interface FabricanteDAO {
 
     public Optional<Integer> getCountProductos(int id);
 
-    public List<FabricanteDTO> getAllDTOPlusCountProductos();
+    public List<FabricanteDTO> getAllDTOPlusCountProductos(String ordPor, String ascDesc);
 }

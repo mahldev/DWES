@@ -1,8 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@page import="org.iesbelen.model.Fabricante"%>
 <%@page import="java.util.List"%>
-<%@ page import="org.iesbelen.dto.FabricanteDTO" %>
+<%@ page import="org.iesbelen.model.FabricanteDTO" %>
 
 <!DOCTYPE html>
 <html>
@@ -24,9 +23,10 @@
 			<div style="float: left; width: 50%">
 				<h1>Fabricantes</h1>
 			</div>
+
 			<div style="float: none;width: auto;overflow: hidden;min-height: 80px;position: relative;">
 				<div style="position: absolute; left: 39%; top : 39%;">
-					
+
 					<form action="${pageContext.request.contextPath}/tienda/fabricantes/crear">
 						<input type="submit" value="Crear">
 					</form>
@@ -34,6 +34,23 @@
 				
 			</div>
 		</div>
+		<div class="clearfix">
+			<hr/>
+		</div>
+
+
+		<form action="${pageContext.request.contextPath}/tienda/fabricantes" method="get">
+			<select name="ordenar-por">
+				<option value="codigo">Codigo</option>
+				<option value="nombre">Nombre</option>
+			</select>
+			<select name="modo-ordenar">
+				<option value="asc">Ascendente</option>
+				<option value="desc">Descendente</option>
+			</select>
+			<button>Ordenar</button>
+		</form>
+
 		<div class="clearfix">
 			<hr/>
 		</div>
