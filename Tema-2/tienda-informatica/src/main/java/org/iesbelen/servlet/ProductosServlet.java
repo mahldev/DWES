@@ -13,6 +13,7 @@ import org.iesbelen.dao.ProductoDAOImpl;
 import org.iesbelen.model.Fabricante;
 import org.iesbelen.model.Producto;
 import org.iesbelen.service.ProductoService;
+import org.iesbelen.util.HTTPRequestUtil;
 import org.iesbelen.util.ResultadoDeCreacion;
 
 import java.io.IOException;
@@ -48,8 +49,9 @@ public class ProductosServlet extends HttpServlet {
             //GET
             //	/productos/
             //	/productos
+            String nombreFiltro  = HTTPRequestUtil.getCadenaODefault(request, "filtrar-por-nombre");
 
-            request.setAttribute("listaProductos", fabDAO.getAll());
+            request.setAttribute("listaProductos", fabDAO.getAll(nombreFiltro));
             dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/productos.jsp");
 
         } else {

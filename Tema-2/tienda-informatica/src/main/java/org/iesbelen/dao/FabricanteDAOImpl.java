@@ -249,6 +249,7 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
         List<FabricanteDTO> listFabDTO = new ArrayList<>();
 
         String dirOrde = "desc".equals(ascDesc) ? "DESC" : "ASC";
+
         String sql = """
              SELECT f.idFabricante as 'codigo', f.nombre, count(p.idProducto)
              FROM fabricantes f

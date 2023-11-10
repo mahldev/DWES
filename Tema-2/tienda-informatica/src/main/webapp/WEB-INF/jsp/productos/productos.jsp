@@ -38,6 +38,15 @@
 		<div class="clearfix">
 			<hr/>
 		</div>
+
+		<form action="${pageContext.request.contextPath}/tienda/productos" method="get">
+			<label>Nombre: <input type="text" name="filtrar-por-nombre"></label>
+			<button>Filtrar</button>
+		</form>
+
+		<div class="clearfix">
+			<hr/>
+		</div>
 		<div class="clearfix">
 			<div style="float: left;width: 10%">Código</div>
 			<div style="float: left;width: 30%">Nombre</div>
