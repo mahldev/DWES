@@ -18,6 +18,8 @@ import org.iesbelen.model.Fabricante;
 import org.iesbelen.model.FabricanteDTO;
 import org.iesbelen.util.HTTPRequestUtil;
 
+import static java.util.Objects.isNull;
+
 @WebServlet(name = "fabricantesServlet", value = "/tienda/fabricantes/*")
 public class FabricantesServlet extends HttpServlet {
 
@@ -45,7 +47,9 @@ public class FabricantesServlet extends HttpServlet {
             String ordPor = request.getParameter("ordenar-por");
             String ascDesc = request.getParameter("modo-ordenar");
 
-            if (Objects.isNull(ordPor)) { ordPor = "codigo"; }
+            if (isNull(ordPor)) {
+                ordPor = "codigo";
+            }
             List<FabricanteDTO> listFabDTO = fabDAO.getAllDTOPlusCountProductos(ordPor, ascDesc);
 
             //GET
@@ -127,9 +131,11 @@ public class FabricantesServlet extends HttpServlet {
             FabricanteDAO fabDAO = new FabricanteDAOImpl();
 
             String nombre = request.getParameter("nombre");
-            Fabricante nuevoFab = new Fabricante();
-            nuevoFab.setNombre(nombre);
-            fabDAO.create(nuevoFab);
+            if (!nombre.isBlank()) {
+                Fabricante nuevoFab = new Fabricante();
+                nuevoFab.setNombre(nombre);
+                fabDAO.create(nuevoFab);
+            }
 
         } else if (__method__ != null && "put".equalsIgnoreCase(__method__)) {
             // Actualizar uno existente
@@ -158,16 +164,17 @@ public class FabricantesServlet extends HttpServlet {
         String nombre = request.getParameter("nombre");
         Fabricante fab = new Fabricante();
 
-        try {
-            int id = Integer.parseInt(codigo);
-            fab.setIdFabricante(id);
-            fab.setNombre(nombre);
-            fabDAO.update(fab);
+        if (!nombre.isBlank()) {
+            try {
+                int id = Integer.parseInt(codigo);
+                fab.setIdFabricante(id);
+                fab.setNombre(nombre);
+                fabDAO.update(fab);
 
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+            } catch (NumberFormatException nfe) {
+                nfe.printStackTrace();
+            }
         }
-
     }
 
     @Override

@@ -1,24 +1,30 @@
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inicio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <style>
-        #contenedor {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 2em;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            font-family: system-ui;
+        }
+
+        body {
+            background-color: #f1f1f1;
         }
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inicio</title>
 </head>
 <body>
+    <%@include file="./WEB-INF/components/header.jspf"%>
 
-    <div class="d-grid gap-2" id="contenedor">
-        <a class="btn btn-primary btn-lg" href="<%=application.getContextPath()%>/tienda/fabricantes">FABRICANTES</a>
-        <a class="btn btn-success btn-lg" href="<%=application.getContextPath()%>/tienda/productos">PRODUCTOS</a>
-    </div>
+    <main>
 
-    <%@include file="boostrap.jspf"%>
+    </main>
 </body>
 </html>
