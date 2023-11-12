@@ -17,4 +17,14 @@ public class HTTPRequestUtil {
             return 0d;
         }
     }
+
+    public static Integer getIntegerODefault(HttpServletRequest req, String nombre) {
+        String valor = req.getParameter(nombre);
+        try {
+            return valor != null && !valor.isBlank() ? Integer.parseInt(valor) : 0;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
 }

@@ -48,9 +48,7 @@ public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO 
             if (rsGenKeys.next())
                 fabricante.setIdFabricante(rsGenKeys.getInt(1));
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             closeDb(conn, ps, rs);

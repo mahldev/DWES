@@ -7,7 +7,7 @@
     <ul class="Nav-ul">
       <li><a href="${pageContext.request.contextPath}/index.jsp">Inicio</a></li>
       <li><a href="${pageContext.request.contextPath}/tienda/fabricantes/">Fabricantes</a></li>
-      <li><a href="${pageContext.request.contextPath}/tienda/productos//">Productos</a></li>
+      <li><a href="${pageContext.request.contextPath}/tienda/productos/">Productos</a></li>
     </ul>
 
     <div class="wrapper">

@@ -65,7 +65,7 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
         try (Connection conn = connectDB();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, "%" + nombre  + "%");
+            ps.setString(1, "%" + nombre + "%");
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -136,32 +136,24 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
     @Override
     public void update(Producto producto) {
 
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        String sql = "UPDATE productos " +
+                "SET idProducto = ?, nombre = ?, precio = ?, idFabricante = ? " +
+                "WHERE idProducto = ?";
 
-        try {
-            conn = connectDB();
+        try (Connection conn = connectDB();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps = conn.prepareStatement("UPDATE producto SET nombre = ?,precio = ?  WHERE idProducto = ?");
-            int idx = 1;
-            ps.setString(idx++, producto.getNombre());
-            ps.setDouble(idx++, producto.getPrecio());
-            ps.setInt(idx, producto.getIdProducto());
+            int index = 1;
 
-            int rows = ps.executeUpdate();
+            ps.setInt(index++, producto.getIdProducto());
+            ps.setString(index++, producto.getNombre());
+            ps.setDouble(index++, producto.getPrecio());
+            ps.setInt(index++, producto.getCodigo_fabricante());
+            ps.setInt(index, producto.getIdProducto());
 
-            if (rows == 0)
-                System.out.println("Update de fabricante con 0 registros actualizados.");
-
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            closeDb(conn, ps, rs);
         }
-
     }
 
     /**
@@ -186,9 +178,7 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
             if (rows == 0)
                 System.out.println("Delete de fabricante con 0 registros eliminados.");
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             closeDb(conn, ps, rs);

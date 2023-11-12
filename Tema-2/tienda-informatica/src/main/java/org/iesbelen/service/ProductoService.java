@@ -24,6 +24,24 @@ public class ProductoService {
         FabricanteDAO fabDAO = new FabricanteDAOImpl();
         ResultadoDeValidacion validaciones = new ResultadoDeValidacion();
         Optional<Fabricante> fabricanteOpt = fabDAO.findByName(fabricante);
+
+        return getProductoResultadoDeCreacion(nombre, precio, validaciones, fabricanteOpt);
+    }
+
+    public static ResultadoDeCreacion<Producto> crearProducto(String nombre,
+                                                              Double precio,
+                                                              Integer idFabricante) {
+        FabricanteDAO fabDAO = new FabricanteDAOImpl();
+        ResultadoDeValidacion validaciones = new ResultadoDeValidacion();
+        Optional<Fabricante> fabricanteOpt = fabDAO.find(idFabricante);
+
+        return getProductoResultadoDeCreacion(nombre, precio, validaciones, fabricanteOpt);
+    }
+
+    private static ResultadoDeCreacion<Producto> getProductoResultadoDeCreacion(String nombre,
+                                                                                Double precio,
+                                                                                ResultadoDeValidacion validaciones,
+                                                                                Optional<Fabricante> fabricanteOpt) {
         int idFabricante;
         Producto producto;
 

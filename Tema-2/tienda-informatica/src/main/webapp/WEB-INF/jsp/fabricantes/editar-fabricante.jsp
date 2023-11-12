@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Detalle Fabricante</title>
+    <title>Editar Fabricante</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <style>
         * {
@@ -36,6 +36,7 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
         }
 
         .wrapper-main {
@@ -84,10 +85,6 @@
             border-radius: 3px;
         }
 
-        #datos input::placeholder {
-            font-style: italic;
-        }
-
     </style>
 </head>
 <body>
@@ -98,7 +95,7 @@
         if (optFab.isPresent()) {
     %>
     <div class="wrapper-main">
-        <h3>Nuevo Fabricante</h3>
+        <h3>Editar Fabricante</h3>
         <button form="datos" class="crearNuevoFab-Button">Guardar</button>
     </div>
 

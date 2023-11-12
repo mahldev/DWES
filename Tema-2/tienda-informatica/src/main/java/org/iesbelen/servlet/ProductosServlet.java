@@ -18,9 +18,9 @@ import org.iesbelen.util.ResultadoDeCreacion;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
-import static org.iesbelen.util.HTTPRequestUtil.getCadenaODefault;
-import static org.iesbelen.util.HTTPRequestUtil.getDoubleODefault;
+import static org.iesbelen.util.HTTPRequestUtil.*;
 
 @WebServlet(name = "productosServlet", value = "/tienda/productos/*")
 public class ProductosServlet extends HttpServlet {
@@ -49,7 +49,7 @@ public class ProductosServlet extends HttpServlet {
             //GET
             //	/productos/
             //	/productos
-            String nombreFiltro  = HTTPRequestUtil.getCadenaODefault(request, "filtrar-por-nombre");
+            String nombreFiltro = HTTPRequestUtil.getCadenaODefault(request, "filtrar-por-nombre");
 
             request.setAttribute("listaProductos", fabDAO.getAll(nombreFiltro));
             dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/productos.jsp");
@@ -94,13 +94,14 @@ public class ProductosServlet extends HttpServlet {
                 }
 
             } else if (pathParts.length == 3 && "editar".equals(pathParts[1])) {
-                ProductoDAO fabDAO = new ProductoDAOImpl();
-
+                ProductoDAO prodDAO = new ProductoDAOImpl();
+                FabricanteDAO fabDao = new FabricanteDAOImpl();
                 // GET
                 // /productos/editar/{id}
                 try {
-                    request.setAttribute("producto", fabDAO.find(Integer.parseInt(pathParts[2])));
-                    dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/editar-producto.jsp");
+                    request.setAttribute("fabricantes", fabDao.getAll());
+                    request.setAttribute("producto", prodDAO.find(Integer.parseInt(pathParts[2])));
+                    dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/editar-producto.jsp");
 
                 } catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
@@ -140,12 +141,12 @@ public class ProductosServlet extends HttpServlet {
 
             if (prod.esValido()) prodDAO.create(prod.get());
 
-        } else if (__method__ != null && "put".equalsIgnoreCase(__method__)) {
+        } else if ("put".equalsIgnoreCase(__method__)) {
             // Actualizar uno existente
             //Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización PUT.
             doPut(request, response);
 
-        } else if (__method__ != null && "delete".equalsIgnoreCase(__method__)) {
+        } else if ("delete".equalsIgnoreCase(__method__)) {
             // Actualizar uno existente
             //Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización DELETE.
             doDelete(request, response);
@@ -162,23 +163,19 @@ public class ProductosServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ProductoDAO prodDAO = new ProductoDAOImpl();
 
-        ProductoDAO fabDAO = new ProductoDAOImpl();
-        String codigo = request.getParameter("codigo");
-        String nombre = request.getParameter("nombre");
-        Producto fab = new Producto();
+        int codigo = getIntegerODefault(request, "codigo");
+        String nombre = getCadenaODefault(request, "nombre");
+        Double precio = getDoubleODefault(request, "precio");
+        Integer idFabricante = getIntegerODefault(request, "fabricante");
 
-        try {
+        ResultadoDeCreacion<Producto> producto = ProductoService.crearProducto(nombre, precio, idFabricante);
 
-            int id = Integer.parseInt(codigo);
-            fab.setIdProducto(id);
-            fab.setNombre(nombre);
-            fabDAO.update(fab);
-
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
+        if (producto.esValido() && codigo != 0) {
+            producto.get().setIdProducto(codigo);
+            prodDAO.update(producto.get());
         }
-
     }
 
     @Override

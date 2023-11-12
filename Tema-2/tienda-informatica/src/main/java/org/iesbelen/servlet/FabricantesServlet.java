@@ -47,9 +47,7 @@ public class FabricantesServlet extends HttpServlet {
             String ordPor = request.getParameter("ordenar-por");
             String ascDesc = request.getParameter("modo-ordenar");
 
-            if (isNull(ordPor)) {
-                ordPor = "codigo";
-            }
+            if (isNull(ordPor)) { ordPor = "codigo"; }
             List<FabricanteDTO> listFabDTO = fabDAO.getAllDTOPlusCountProductos(ordPor, ascDesc);
 
             //GET
@@ -137,12 +135,12 @@ public class FabricantesServlet extends HttpServlet {
                 fabDAO.create(nuevoFab);
             }
 
-        } else if (__method__ != null && "put".equalsIgnoreCase(__method__)) {
+        } else if ("put".equalsIgnoreCase(__method__)) {
             // Actualizar uno existente
             //Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización PUT.
             doPut(request, response);
 
-        } else if (__method__ != null && "delete".equalsIgnoreCase(__method__)) {
+        } else if ("delete".equalsIgnoreCase(__method__)) {
             // Borrar uno existente
             //Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización DELETE.
             doDelete(request, response);
