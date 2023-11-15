@@ -28,7 +28,7 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
             //ps = conn.prepareStatement("INSERT INTO fabricantes (nombre) VALUES (?)", new String[] {"codigo"});
             //Ver también, AbstractDAOImpl.executeInsert ...
             //Columna fabricante.codigo es clave primaria auto_increment, por ese motivo se omite de la sentencia SQL INSERT siguiente.
-            ps = conn.prepareStatement("INSERT INTO productos (nombre,precio,idFabricante) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS);
+            ps = conn.prepareStatement("INSERT INTO productos (nombre, precio, idFabricante) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             int idx = 1;
             ps.setString(idx++, producto.getNombre());
@@ -150,6 +150,8 @@ public class ProductoDAOImpl extends AbstractDAOImpl implements ProductoDAO {
             ps.setDouble(index++, producto.getPrecio());
             ps.setInt(index++, producto.getCodigo_fabricante());
             ps.setInt(index, producto.getIdProducto());
+
+            ps.executeUpdate();
 
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
