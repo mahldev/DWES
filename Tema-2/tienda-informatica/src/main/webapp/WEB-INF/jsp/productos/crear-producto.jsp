@@ -34,7 +34,6 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
-            margin-top: .5em;
         }
 
         .wrapper-main {

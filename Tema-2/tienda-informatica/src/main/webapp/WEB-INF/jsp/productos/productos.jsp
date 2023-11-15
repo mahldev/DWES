@@ -79,7 +79,7 @@
             margin-bottom: 2em;
         }
 
-        .crearNuevoProd-Button {
+        .crearNuevoUsuario-Button {
             height: 40px;
             color: #fff;
             padding: 10px 15px;
@@ -92,12 +92,12 @@
             background: #000;
         }
 
-        .crearNuevoProd-Button:hover {
+        .crearNuevoUsuario-Button:hover {
             background: #fff;
             color: #000
         }
 
-        .crearNuevoProd-Button:active {
+        .crearNuevoUsuario-Button:active {
             transition: none;
             background: #000;
             color: #fff;
