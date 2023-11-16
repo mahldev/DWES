@@ -47,7 +47,7 @@
             margin-bottom: 2em;
         }
 
-        .crearNuevoFab-Button {
+        .button {
             height: 40px;
             color: #fff;
             padding: 10px 15px;
@@ -60,12 +60,12 @@
             background: #000;
         }
 
-        .crearNuevoFab-Button:hover {
+        .button:hover {
             background: #fff;
             color: #000
         }
 
-        .crearNuevoFab-Button:active {
+        .button:active {
             transition: none;
             background: #000;
             color: #fff;

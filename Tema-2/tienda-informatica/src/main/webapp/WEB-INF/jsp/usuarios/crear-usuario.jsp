@@ -1,10 +1,10 @@
 <%@ page import="java.util.List" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%List<String> fabricantes = (List<String>) request.getAttribute("fabricantes"); %>
+
 <html>
 
 <head>
-    <title>Crear producto</title>
+    <title>Crear usuario</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
     <style>
         * {
@@ -75,7 +75,7 @@
             align-items: center;
             row-gap: 1em;
         }
-        
+
         #datos input,
         #datos select {
             padding: .5em .8em;
@@ -97,34 +97,33 @@
 
 <body>
 
-    <%@include file="../../components/header.jspf" %>
+<%@include file="../../components/header.jspf" %>
 
 
 <main>
 
 
     <div class="wrapper-main">
-        <h3>Nuevo Producto</h3>
-            <button form="datos" class="button">Crear</button>
+        <h3>Nuevo Usuario</h3>
+        <button form="datos" class="button">Crear</button>
     </div>
 
 
-    <form id="datos" action="${pageContext.request.contextPath}/tienda/productos/" method="post">
+    <form id="datos" action="${pageContext.request.contextPath}/tienda/usuarios/" method="post">
 
-        <label for="nombre">Nombre</label>
-        <input type="text" name="nombre" id="nombre" placeholder="Monitor, Disco SSD, Portátil...">
+        <label for="usuario">Nombre</label>
+        <input type="text" name="usuario" id="usuario" placeholder="Juan, Frank, Emilio...">
 
-        <label for="precio">Precio</label>
-        <input type="text" name="precio" id="precio" placeholder="100, 200, 300...">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="12345678">
 
-        <label for="fabricante">Fabricante</label>
-        <select id="fabricante" name="fabricante">
-            <% for (String nombre : fabricantes) { %>
-            <option value="<%=nombre%>"><%=nombre%>
-            </option>
-            <% } %>
+        <label for="rol">Rol</label>
+        <select id="rol" name="rol">
+            <option value="Administrador">Administrador</option>
+            <option value="Vendedor">Vendedor</option>
+            <option value="Cliente">Cliente</option>
         </select>
-        
+
     </form>
 </main>
 </body>

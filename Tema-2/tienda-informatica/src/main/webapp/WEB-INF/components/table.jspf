@@ -1,0 +1,82 @@
+<%@ page import="java.util.List" %>
+<%@ page import="java.lang.reflect.Method" %>
+
+<%
+    List<String> columnNames = (List<String>) request.getAttribute("columnNames");
+    List<String> propertyNames = (List<String>) request.getAttribute("propertyNames");
+    String elementPath = (String) request.getAttribute("elementPath");
+    String idPropertyName = (String) request.getAttribute("idPropertyName");
+%>
+
+<table>
+    <thead>
+    <tr>
+
+        <% for (String columnName : columnNames) { %>
+        <th><%=columnName%>
+        </th>
+        <% } %>
+        <th></th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <% if (request.getAttribute("listaElementos") != null) {
+        List<Object> listaElementos = (List<Object>) request.getAttribute("listaElementos");
+
+        for (Object elemento : listaElementos) { %>
+    <tr>
+        <% for (String propertyName : propertyNames) { %>
+        <td>
+            <%=getPropertyValue(elemento, propertyName)%>
+        </td>
+        <% } %>
+        <td>
+            <div class="wrapper">
+                <form action="${pageContext.request.contextPath}<%=elementPath%>/editar/<%=getPropertyValue(elemento, idPropertyName)%>">
+                    <button class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-svg" width="24" height="24"
+                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+                            <path d="M13.5 6.5l4 4"></path>
+                        </svg>
+                    </button>
+                </form>
+                <form action="${pageContext.request.contextPath}<%=elementPath%>/borrar/" method="post">
+                    <input type="hidden" name="__method__" value="delete"/>
+                    <input type="hidden" name="codigo" value="<%=getPropertyValue(elemento, idPropertyName)%>"/>
+                    <button class="icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-svg" width="24" height="24"
+                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 7l16 0"></path>
+                            <path d="M10 11l0 6"></path>
+                            <path d="M14 11l0 6"></path>
+                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </td>
+    </tr>
+    <% }
+    } %>
+    </tbody>
+</table>
+
+
+<%!
+    String getPropertyValue(Object obj, String propertyName) {
+        try {
+            Method method = obj.getClass().getMethod("get" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1));
+            return method.invoke(obj).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+%>
