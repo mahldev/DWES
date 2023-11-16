@@ -46,8 +46,10 @@ public class FabricantesServlet extends HttpServlet {
 
             String ordPor = request.getParameter("ordenar-por");
             String ascDesc = request.getParameter("modo-ordenar");
-
-            if (isNull(ordPor)) { ordPor = "codigo"; }
+            String orderFromHidden = request.getParameter("");
+            if (isNull(ordPor)) {
+                ordPor = "codigo";
+            }
             List<FabricanteDTO> listFabDTO = fabDAO.getAllDTOPlusCountProductos(ordPor, ascDesc);
 
             //GET
@@ -55,6 +57,9 @@ public class FabricantesServlet extends HttpServlet {
             //	/fabricantes
 
             request.setAttribute("listaFabricantes", listFabDTO);
+            request.setAttribute("ordPor", ordPor);
+            request.setAttribute("ascDesc", ascDesc);
+            request.setAttribute("orderFromHidden", orderFromHidden);
             dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/fabricantes/fabricantes.jsp");
 
         } else {

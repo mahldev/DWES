@@ -38,13 +38,13 @@
             max-width: 1000px;
             margin-left: auto;
             margin-right: auto;
-						position: relative;
+            position: relative;
         }
 
         table {
             border-collapse: collapse;
             margin-bottom: 20px;
-						width: 90%;
+            width: 90%;
         }
 
         thead td {
@@ -79,7 +79,7 @@
             margin-bottom: 2em;
         }
 
-        .crearNuevoUsuario-Button {
+        .crearNuevoProd-Button {
             height: 40px;
             color: #fff;
             padding: 10px 15px;
@@ -92,12 +92,12 @@
             background: #000;
         }
 
-        .crearNuevoUsuario-Button:hover {
+        .crearNuevoProd-Button:hover {
             background: #fff;
             color: #000
         }
 
-        .crearNuevoUsuario-Button:active {
+        .crearNuevoProd-Button:active {
             transition: none;
             background: #000;
             color: #fff;
@@ -115,22 +115,22 @@
             cursor: pointer;
         }
 
-				#search-bar {
-					flex: 1;
-					padding: .5em .8em;
-					border: 1px solid #ddd;
-					border-radius: 3px;
-					margin-bottom: 1.5em;
-				}
+        #search-bar {
+            flex: 1;
+            padding: .5em .8em;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-bottom: 1.5em;
+        }
 
-				#search-form {
-					display: flex;
-					width: 90%;
-				}
+        #search-form {
+            display: flex;
+            width: 90%;
+        }
 
-				#search-bar::placeholder {
-					font-style: italic;
-				}
+        #search-bar::placeholder {
+            font-style: italic;
+        }
     </style>
 </head>
 
@@ -146,19 +146,19 @@
         </form>
     </div>
 
-		<form action="${pageContext.request.contextPath}/tienda/productos" method="get" id="search-form">
-			<input type="search" name="filtrar-por-nombre" id="search-bar" placeholder="Monitor, Portatil, Disco... ">
-			<button class="icon"></button>
-		</form>
+    <form action="${pageContext.request.contextPath}/tienda/productos" method="get" id="search-form">
+        <input type="search" name="filtrar-por-nombre" id="search-bar" placeholder="Monitor, Portatil, Disco... ">
+        <button class="icon"></button>
+    </form>
 
     <table>
         <thead>
-					
+
         <tr>
             <td>ID</td>
             <td>Nombre</td>
             <td>Precio</td>
-						<td></td>
+            <td></td>
         </tr>
 
         </thead>
@@ -195,48 +195,49 @@
                     <%=producto.getPrecio()%>
                 </a>
             </td>
-						
-						<td>
-							<div class="wrapper">
-								<form action="${pageContext.request.contextPath}/tienda/productos/editar/<%=producto.getIdProducto()%>">
-										<button class="icon">
-												<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil"
-														 width="24"
-														 height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-														 stroke-linecap="round" stroke-linejoin="round">
-														<path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-														<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-														<path d="M13.5 6.5l4 4"></path>
-												</svg>
-										</button>
-								</form>
-								<form action="${pageContext.request.contextPath}/tienda/productos/borrar/" method="post">
-										<input type="hidden" name="__method__" value="delete"/>
-										<input type="hidden" name="codigo" value="<%= producto.getIdProducto()%>"/>
-										<button class="icon">
-												<svg xmlns="http://www.w3.org/2000/svg"
-														 class="icon icon-tabler icon-tabler-trash" width="24"
-														 height="24" viewBox="0 0 24 24" stroke-width="2"
-														 stroke="currentColor" fill="none" stroke-linecap="round"
-														 stroke-linejoin="round">
-														<path stroke="none" d="M0 0h24v24H0z" fill="none">
-														</path>
-														<path d="M4 7l16 0"></path>
-														<path d="M10 11l0 6"></path>
-														<path d="M14 11l0 6"></path>
-														<path
-																		d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12">
-														</path>
-														<path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3">
-														</path>
-												</svg>
-										</button>
-								</form>
-							</div>
-						</td>
+
+            <td>
+                <div class="wrapper">
+                    <form action="${pageContext.request.contextPath}/tienda/productos/editar/<%=producto.getIdProducto()%>">
+                        <button class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil"
+                                 width="24"
+                                 height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+                                <path d="M13.5 6.5l4 4"></path>
+                            </svg>
+                        </button>
+                    </form>
+                    <form action="${pageContext.request.contextPath}/tienda/productos/borrar/" method="post">
+                        <input type="hidden" name="__method__" value="delete"/>
+                        <input type="hidden" name="codigo" value="<%= producto.getIdProducto()%>"/>
+                        <button class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="icon icon-tabler icon-tabler-trash" width="24"
+                                 height="24" viewBox="0 0 24 24" stroke-width="2"
+                                 stroke="currentColor" fill="none" stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                </path>
+                                <path d="M4 7l16 0"></path>
+                                <path d="M10 11l0 6"></path>
+                                <path d="M14 11l0 6"></path>
+                                <path
+                                        d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12">
+                                </path>
+                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3">
+                                </path>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </td>
         </tr>
 
-    <% }} %>
+        <% }
+        } %>
 
         </tbody>
     </table>

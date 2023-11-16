@@ -12,7 +12,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
     @Override
     public void create(Usuario usuario) {
-        String sql = "INSERT INTO usuario (usuario, password, rol) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)";
 
         try (Connection conn = connectDB();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -31,7 +31,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
     @Override
     public List<Usuario> getAll() {
 
-        String sql = "SELECT * FROM usuario";
+        String sql = "SELECT * FROM usuarios";
         List<Usuario> usuarioList = new ArrayList<>();
 
         try (Connection conn = connectDB();
@@ -53,7 +53,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
     @Override
     public Optional<Usuario> find(int id) {
 
-        String sql = "SELECT * FROM usuario WHEN id = ?";
+        String sql = "SELECT * FROM usuarios WHEN idUsuario = ?";
 
         try (Connection conn = connectDB();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -78,13 +78,13 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
     public void update(Usuario usuario) {
 
         String sql = """
-                UPDATE usuario
+                UPDATE usuarios
                 SET 
                     id = ?,
                     usuario = ?,
                     password = ?,
                     rol = ?
-                WHERE id = ?
+                WHERE idUsuario = ?
                 """;
 
         try (Connection conn = connectDB();
@@ -109,7 +109,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
     @Override
     public void delete(int id) {
 
-        String sql = "DELETE FROM usuario WHERE id = ?";
+        String sql = "DELETE FROM usuarios WHERE idUsuario = ?";
 
         try (Connection conn = connectDB();
              PreparedStatement ps = conn.prepareStatement(sql)) {
