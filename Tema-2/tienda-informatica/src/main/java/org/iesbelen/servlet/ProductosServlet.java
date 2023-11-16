@@ -49,9 +49,12 @@ public class ProductosServlet extends HttpServlet {
             //GET
             //	/productos/
             //	/productos
+            String searchFormHidden = request.getParameter("searchFormHidden");
             String nombreFiltro = HTTPRequestUtil.getCadenaODefault(request, "filtrar-por-nombre");
 
             request.setAttribute("listaProductos", fabDAO.getAll(nombreFiltro));
+            request.setAttribute("searchQuery", nombreFiltro);
+            request.setAttribute("searchFormHidden", searchFormHidden);
             dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/productos.jsp");
 
         } else {

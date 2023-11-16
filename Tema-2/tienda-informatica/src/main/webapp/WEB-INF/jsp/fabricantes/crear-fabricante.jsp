@@ -46,7 +46,7 @@
 						margin-bottom: 2em;
 					}
 
-					.crearNuevoFab-Button {
+					.button {
 						height: 40px;
 						color: #fff;
 						padding: 10px 15px;
@@ -59,12 +59,12 @@
 						background: #000;
 					}
 
-					.crearNuevoFab-Button:hover {
+					.button:hover {
 						background: #fff;
 						color: #000
 					}
 
-					.crearNuevoFab-Button:active {
+					.button:active {
 						transition: none;
 						background: #000;
 						color: #fff;
@@ -101,7 +101,7 @@
 
 						<div class="wrapper-main">
 							<h3>Nuevo Fabricante</h3>
-								<button form="datos" class="crearNuevoFab-Button">Crear</button>
+								<button form="datos" class="button">Crear</button>
 						</div>
 
 						<form id="datos" action="${pageContext.request.contextPath}/tienda/fabricantes/crear/" method="post">

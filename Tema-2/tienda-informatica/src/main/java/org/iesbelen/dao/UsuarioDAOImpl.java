@@ -53,7 +53,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
     @Override
     public Optional<Usuario> find(int id) {
 
-        String sql = "SELECT * FROM usuarios WHEN idUsuario = ?";
+        String sql = "SELECT * FROM usuarios WHERE idUsuario = ?";
 
         try (Connection conn = connectDB();
              PreparedStatement ps = conn.prepareStatement(sql)) {

@@ -76,25 +76,27 @@
             margin-bottom: 2em;
         }
 
-        .crearNuevoFab-Button {
-            height: 40px;
+        .button {
+            display: flex;
+            align-items: center;
+            padding: 10px 10px;
             color: #fff;
-            padding: 10px 15px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            border-radius: 20px;
+            border-radius: 46px;
             border: 2px solid;
             outline: none;
             background: #000;
+            gap: 5px;;
         }
 
-        .crearNuevoFab-Button:hover {
+        .button:hover {
             background: #fff;
             color: #000
         }
 
-        .crearNuevoFab-Button:active {
+        .button:active {
             transition: none;
             background: #000;
             color: #fff;
@@ -138,13 +140,14 @@
             animation: border .3ms;
         }
 
-        .icon-svg:hover {
-        }
-
         .icon-svg:active {
             display: inline-block;
             position: relative;
             transform: translateY(1px)
+        }
+
+        #order-form[hidden] {
+            display: none;
         }
     </style>
     <meta charset="UTF-8">
@@ -156,39 +159,60 @@
 
 <main>
     <div class="wrapper-main">
-        <h3>Fabricantes</h3>
+        <h2>Fabricantes</h2>
+
         <div class="wrapper-option">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon-svg" width="24" height="24"
-                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
-                <path d="M21 21l-6 -6"/>
-            </svg>
-            <svg id="filter" class="icon-svg" xmlns="http://www.w3.org/2000/svg" width="24"
-                 height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                 fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path
-                        d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z"/>
-            </svg>
-            <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                 stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M12 21h-7a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7"/>
-                <path d="M3 10h18"/>
-                <path d="M10 3v18"/>
-                <path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
-                <path d="M19.001 15.5v1.5"/>
-                <path d="M19.001 21v1.5"/>
-                <path d="M22.032 17.25l-1.299 .75"/>
-                <path d="M17.27 20l-1.3 .75"/>
-                <path d="M15.97 17.25l1.3 .75"/>
-                <path d="M20.733 20l1.3 .75"/>
-            </svg>
+
+            <button class="button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-svg" width="24" height="24"
+                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
+                    <path d="M21 21l-6 -6"/>
+                </svg>
+            </button>
+
+            <button class="button">
+                <svg id="filter" class="icon-svg" xmlns="http://www.w3.org/2000/svg" width="24"
+                     height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                     fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path
+                            d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z"/>
+                </svg>
+            </button>
+
+            <button class="button">
+                <svg class="icon-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 21h-7a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v7"/>
+                    <path d="M3 10h18"/>
+                    <path d="M10 3v18"/>
+                    <path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                    <path d="M19.001 15.5v1.5"/>
+                    <path d="M19.001 21v1.5"/>
+                    <path d="M22.032 17.25l-1.299 .75"/>
+                    <path d="M17.27 20l-1.3 .75"/>
+                    <path d="M15.97 17.25l1.3 .75"/>
+                    <path d="M20.733 20l1.3 .75"/>
+                </svg>
+            </button>
+
+
             <form action="${pageContext.request.contextPath}/tienda/fabricantes/crear">
-                <button class="crearNuevoFab-Button">+ Crear nuevo</button>
+                <button class="button">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="icon icon-tabler icon-tabler-plus" width="24" height="24"
+                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M12 5l0 14"/>
+                        <path d="M5 12l14 0"/>
+                    </svg>
+                </button>
             </form>
         </div>
     </div>
@@ -199,30 +223,30 @@
         String ascDesc = (String) request.getAttribute("ascDesc");
         ascDesc = (ascDesc == null)
                 ? "asc" : ascDesc;
-        Boolean orderFormHidden = (Boolean)
-                request.getAttribute("orderFromHidden");
-        orderFormHidden = orderFormHidden == null ? true : orderFormHidden; %>
+        String orderFormHidden = (String)
+                request.getAttribute("orderFormHidden");
+        orderFormHidden = orderFormHidden == null ? "true"
+                : orderFormHidden; %>
 
-    <div hidden>
-        <form <%=orderFormHidden ? "hidden" : "" %>
-                action="${pageContext.request.contextPath}/tienda/fabricantes" method="get"
-                id="order-form">
-            <label>Ordenar por</label>
-            <select name="ordenar-por" class="order-select">
-                <option value="codigo" <%="codigo".equals(ordPor) ? "selected" : "" %>>ID
-                </option>
-                <option value="nombre" <%="nombre".equals(ordPor) ? "selected" : "" %>>Nombre
-                </option>
-            </select>
-            <select name="modo-ordenar" class="order-select">
-                <option value="asc" <%="asc".equals(ascDesc) ? "selected" : "" %>>Ascendente
-                </option>
-                <option value="desc" <%="desc".equals(ascDesc) ? "selected" : "" %>>Descendente
-                </option>
-            </select>
-            <input type="hidden" name="orderFormHidden" value="<%=orderFormHidden%>">
-        </form>
-    </div>
+
+    <form <%="true".equals(orderFormHidden) ? "hidden" : "" %>
+            action="${pageContext.request.contextPath}/tienda/fabricantes" method="get"
+            id="order-form">
+        <label>Ordenar por</label>
+        <select name="ordenar-por" class="order-select">
+            <option value="codigo" <%="codigo".equals(ordPor) ? "selected" : "" %>>ID
+            </option>
+            <option value="nombre" <%="nombre".equals(ordPor) ? "selected" : "" %>>Nombre
+            </option>
+        </select>
+        <select name="modo-ordenar" class="order-select">
+            <option value="asc" <%="asc".equals(ascDesc) ? "selected" : "" %>>Ascendente
+            </option>
+            <option value="desc" <%="desc".equals(ascDesc) ? "selected" : "" %>>Descendente
+            </option>
+        </select>
+        <input type="hidden" name="orderFormHidden" value="<%= orderFormHidden%>">
+    </form>
 
 
     <table>
@@ -317,7 +341,11 @@
 
 <script>
     const orderForm = document.querySelector('#order-form')
-    const toggleHidden = (element) => element.hidden = !element.hidden
+
+    const toggleHidden = (element) => {
+        element.hidden = !element.hidden;
+        document.querySelector('input[name="orderFormHidden"]').value = element.hidden.toString();
+    };
 
     document.querySelectorAll('select').forEach(slct => slct.addEventListener('change', () => {
         orderForm.submit()

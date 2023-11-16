@@ -46,7 +46,7 @@ public class FabricantesServlet extends HttpServlet {
 
             String ordPor = request.getParameter("ordenar-por");
             String ascDesc = request.getParameter("modo-ordenar");
-            String orderFromHidden = request.getParameter("");
+            String orderFormHidden = request.getParameter("orderFormHidden");
             if (isNull(ordPor)) {
                 ordPor = "codigo";
             }
@@ -59,7 +59,7 @@ public class FabricantesServlet extends HttpServlet {
             request.setAttribute("listaFabricantes", listFabDTO);
             request.setAttribute("ordPor", ordPor);
             request.setAttribute("ascDesc", ascDesc);
-            request.setAttribute("orderFromHidden", orderFromHidden);
+            request.setAttribute("orderFormHidden", orderFormHidden);
             dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/fabricantes/fabricantes.jsp");
 
         } else {

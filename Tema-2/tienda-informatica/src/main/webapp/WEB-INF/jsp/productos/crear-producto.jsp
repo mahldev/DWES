@@ -44,7 +44,7 @@
             margin-bottom: 2em;
         }
 
-        .crearNuevoProd-Button-Button {
+        .button {
             height: 40px;
             color: #fff;
             padding: 10px 15px;
@@ -57,12 +57,12 @@
             background: #000;
         }
 
-        .crearNuevoProd-Button-Button:hover {
+        .button:hover {
             background: #fff;
             color: #000
         }
 
-        .crearNuevoProd-Button-Button:active {
+        .button:active {
             transition: none;
             background: #000;
             color: #fff;
@@ -105,7 +105,7 @@
 
     <div class="wrapper-main">
         <h3>Nuevo Producto</h3>
-            <button form="datos" class="crearNuevoProd-Button-Button">Crear</button>
+            <button form="datos" class="button">Crear</button>
     </div>
 
 
