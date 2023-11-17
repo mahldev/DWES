@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.iesbelen.dao.UsuarioDAO;
 import org.iesbelen.dao.UsuarioDAOImpl;
 import org.iesbelen.model.Usuario;
@@ -31,6 +32,7 @@ public class UsuarioServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
         String path = req.getServletPath().concat(pathInfo == null ? "/" : pathInfo);
 
+        System.out.println(req.getMethod());
         System.out.println(path);
 
         if ("/tienda/usuarios/".equals(path))
@@ -42,24 +44,65 @@ public class UsuarioServlet extends HttpServlet {
         if (path.startsWith("/tienda/usuarios/editar/"))
             editarUsuarioJSP(req, res);
 
+        if ("/tienda/usuarios/login/".equals(path))
+            loginJSP(req, res);
     }
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
-        String __method__ = req.getParameter("__method__");
+        String pathInfo = req.getPathInfo();
+        String path = req.getServletPath().concat(pathInfo == null ? "/" : pathInfo);
 
-        if (__method__ == null)
-            crearUsuario(req, res);
 
-        else if (__method__.equals("put"))
-            doPut(req, res);
+        System.out.println(req.getMethod());
+        System.out.println(path);
 
-        else if (__method__.equals("delete"))
-            doDelete(req, res);
+        if ("/tienda/usuarios/".equals(path)) {
+            String __method__ = req.getParameter("__method__");
 
+            if (__method__ == null)
+                crearUsuario(req, res);
+
+            else if (__method__.equals("put"))
+                doPut(req, res);
+
+            else if (__method__.equals("delete"))
+                doDelete(req, res);
+        }
+
+        if ("/tienda/usuarios/login/".equals(path))
+            login(req, res);
+
+        if ("/tienda/usuarios/logout/".equals(path))
+            logout(req, res);
+    }
+
+    private void logout(HttpServletRequest req, HttpServletResponse res) {
+        HttpSession session = req.getSession();
+        session.invalidate();
+    }
+
+    private void login(HttpServletRequest req, HttpServletResponse res)
+            throws IOException, ServletException {
+
+        HttpSession session = req.getSession(true);
+        String usuario = getCadenaODefault(req, "usuario");
+        String password = getCadenaODefault(req, "password");
+
+        ResultadoDeCreacion<Usuario> resDelLogin = Usuario.login(usuario, password);
+
+        if (resDelLogin.esValido()) {
+            System.out.println("valido");
+            session.setAttribute("usuario-logado", resDelLogin.get());
+            res.sendRedirect(req.getContextPath().concat("/"));
+        }
+    }
+
+    private void loginJSP(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException {
+        req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, res);
     }
 
     @Override

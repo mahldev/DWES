@@ -12,9 +12,10 @@
 
         <div class="wrapper">
             <ul class="Nav-ul">
-                <button class="button-login">Iniciar Sesion</button>
+                <button form="iniciarSesion" class="button-login">Iniciar Sesion</button>
             </ul>
         </div>
 
+        <form hidden id="iniciarSesion" action="${pageContext.request.contextPath}/tienda/usuarios/login/"></form>
     </nav>
 </header>

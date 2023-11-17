@@ -1,5 +1,7 @@
 package org.iesbelen.model;
 
+import org.iesbelen.dao.UsuarioDAO;
+import org.iesbelen.dao.UsuarioDAOImpl;
 import org.iesbelen.util.ResultadoDeCreacion;
 import org.iesbelen.util.ResultadoDeValidacion;
 
@@ -7,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Usuario {
 
@@ -16,6 +19,29 @@ public class Usuario {
     private String password;
     private String rol;
 
+    public static ResultadoDeCreacion<Usuario> login(String usuario,
+                                                     String password) {
+        UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
+        Optional<Usuario> user = usuarioDAO.findByName(usuario);
+        return new ResultadoDeCreacion<>(user.orElse(new Usuario()), validarLogin(user, password));
+    }
+
+    public static ResultadoDeValidacion validarLogin(Optional<Usuario> usuario,
+                                                     String password) {
+        ResultadoDeValidacion res = new ResultadoDeValidacion();
+
+
+        if (usuario.isEmpty()) {
+            res.addError("usuarioNoExiste", "El usuario no existe en la base de datos");
+            return res;
+        }
+
+        if (!usuario.get().getPassword().equals(hashPassword(password))) {
+            res.addError("passwordNoEsCorrecta", "La contraseña no coincide con el usuarioº");
+        }
+
+        return res;
+    }
 
     public int getId() {
         return id;

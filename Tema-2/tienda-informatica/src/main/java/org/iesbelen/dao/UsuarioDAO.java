@@ -13,7 +13,11 @@ public interface UsuarioDAO {
 
     public Optional<Usuario> find(int id);
 
+    public Optional<Usuario> findByName(String nombre);
+
     public void update(Usuario usuario);
 
     public void delete(int id);
+
+
 }
