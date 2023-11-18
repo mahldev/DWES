@@ -14,7 +14,7 @@ import java.util.Optional;
 public class Usuario {
 
 
-    private int id;
+    private int idUsuario;
     private String usuario;
     private String password;
     private String rol;
@@ -43,12 +43,12 @@ public class Usuario {
         return res;
     }
 
-    public int getId() {
-        return id;
+    public int getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getUsuario() {
@@ -80,12 +80,12 @@ public class Usuario {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return id == usuario.id;
+        return idUsuario == usuario.idUsuario;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(idUsuario);
     }
 
     public static ResultadoDeValidacion validar(String nombre,

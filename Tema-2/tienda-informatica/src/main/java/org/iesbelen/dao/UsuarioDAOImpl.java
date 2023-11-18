@@ -102,7 +102,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
         String sql = """
                 UPDATE usuarios
                 SET 
-                    id = ?,
+                    idUsuario = ?,
                     usuario = ?,
                     password = ?,
                     rol = ?
@@ -114,11 +114,11 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
             int index = 1;
 
-            ps.setInt(index++, usuario.getId());
+            ps.setInt(index++, usuario.getIdUsuario());
             ps.setString(index++, usuario.getUsuario());
             ps.setString(index++, usuario.getPassword());
             ps.setString(index++, usuario.getRol());
-            ps.setInt(index, usuario.getId());
+            ps.setInt(index, usuario.getIdUsuario());
 
             ps.executeUpdate();
 
@@ -151,7 +151,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
         Usuario usuario = new Usuario();
 
-        usuario.setId(rs.getInt(index++));
+        usuario.setIdUsuario(rs.getInt(index++));
         usuario.setUsuario(rs.getString(index++));
         usuario.setPassword(rs.getString(index++));
         usuario.setRol(rs.getString(index));

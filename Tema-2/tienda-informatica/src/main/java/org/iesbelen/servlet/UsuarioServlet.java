@@ -1,165 +1,184 @@
 package org.iesbelen.servlet;
 
-import jakarta.servlet.ServletException;
+import static java.util.Objects.isNull;
+import static org.iesbelen.util.HTTPRequestUtil.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
 import jakarta.servlet.annotation.WebServlet;
+import org.iesbelen.dao.UsuarioDAO;
+import org.iesbelen.dao.UsuarioDAOImpl;
+import org.iesbelen.model.Usuario;
+import org.iesbelen.util.ResultadoDeCreacion;
+import org.iesbelen.util.ResultadoDeValidacion;
+
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.iesbelen.dao.UsuarioDAO;
-import org.iesbelen.dao.UsuarioDAOImpl;
-import org.iesbelen.model.Usuario;
-import org.iesbelen.util.HTTPRequestUtil;
-import org.iesbelen.util.ResultadoDeCreacion;
-import org.iesbelen.util.ResultadoDeValidacion;
-
-import java.io.IOException;
-import java.util.Arrays;
-
-import static org.iesbelen.util.HTTPRequestUtil.getCadenaODefault;
-import static org.iesbelen.util.HTTPRequestUtil.getIntegerODefault;
 
 @WebServlet(name = "usuarioServlet", value = "/tienda/usuarios/*")
 public class UsuarioServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> getRoutes = new HashMap<>();
+    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> postRoutes = new HashMap<>();
+    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> putRoutes = new HashMap<>();
+    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> deleteRoutes = new HashMap<>();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
+    public void init() {
+        // GET
+        getRoutes.put("/tienda/usuarios/", this::mostrarUsuarios);
+        getRoutes.put("/tienda/usuarios/editar/\\d+/?", this::devolverUsuario);
+        getRoutes.put("/tienda/usuarios/crear/",
+                (req, res) -> forwardToJsp("/WEB-INF/jsp/usuarios/crear-usuario.jsp", req, res));
+        getRoutes.put("/tienda/usuarios/editar/",
+                (req, res) -> forwardToJsp("/WEB-INF/jsp/usuarios/editar-usuario.jsp", req, res));
+        getRoutes.put("/tienda/usuarios/login/",
+                (req, res) -> forwardToJsp("/WEB-INF/jsp/login.jsp", req, res));
 
+        // POST
+        postRoutes.put("/tienda/usuarios/", this::crearUsuario);
+        postRoutes.put("/tienda/usuarios/login/", this::login);
+        postRoutes.put("/tienda/usuarios/logout/", this::logout);
 
-        String pathInfo = req.getPathInfo();
-        String path = req.getServletPath().concat(pathInfo == null ? "/" : pathInfo);
+        // PUT
+        putRoutes.put("/tienda/usuarios/\\d+/?", this::actualizarUsuario);
 
-        System.out.println(req.getMethod());
-        System.out.println(path);
-
-        if ("/tienda/usuarios/".equals(path))
-            mostrarUsuarios(req, res);
-
-        if ("/tienda/usuarios/crear".equals(path))
-            crearUsuarioJSP(req, res);
-
-        if (path.startsWith("/tienda/usuarios/editar/"))
-            editarUsuarioJSP(req, res);
-
-        if ("/tienda/usuarios/login/".equals(path))
-            loginJSP(req, res);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-
-        String pathInfo = req.getPathInfo();
-        String path = req.getServletPath().concat(pathInfo == null ? "/" : pathInfo);
-
-
-        System.out.println(req.getMethod());
-        System.out.println(path);
-
-        if ("/tienda/usuarios/".equals(path)) {
-            String __method__ = req.getParameter("__method__");
-
-            if (__method__ == null)
-                crearUsuario(req, res);
-
-            else if (__method__.equals("put"))
-                doPut(req, res);
-
-            else if (__method__.equals("delete"))
-                doDelete(req, res);
-        }
-
-        if ("/tienda/usuarios/login/".equals(path))
-            login(req, res);
-
-        if ("/tienda/usuarios/logout/".equals(path))
-            logout(req, res);
-    }
-
-    private void logout(HttpServletRequest req, HttpServletResponse res) {
-        HttpSession session = req.getSession();
-        session.invalidate();
-    }
-
-    private void login(HttpServletRequest req, HttpServletResponse res)
-            throws IOException, ServletException {
-
-        HttpSession session = req.getSession(true);
-        String usuario = getCadenaODefault(req, "usuario");
-        String password = getCadenaODefault(req, "password");
-
-        ResultadoDeCreacion<Usuario> resDelLogin = Usuario.login(usuario, password);
-
-        if (resDelLogin.esValido()) {
-            System.out.println("valido");
-            session.setAttribute("usuario-logado", resDelLogin.get());
-            res.sendRedirect(req.getContextPath().concat("/"));
-        }
-    }
-
-    private void loginJSP(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, res);
+        // DELETE
+        deleteRoutes.put("/tienda/usuarios/borrar/", this::borrarUsuario);
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) {
+        handleRequest(req, res, getRoutes);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) {
+        String __method__ = req.getParameter("__method__");
+
+        if (isNull(__method__))
+            handleRequest(req, res, postRoutes);
+
+        if ("put".equals(__method__))
+            doPut(req, res);
+
+        if ("delete".equals(__method__))
+            doDelete(req, res);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse res) {
+        handleRequest(req, res, putRoutes);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse res) {
+        handleRequest(req, res, deleteRoutes);
+    }
+
+    private void mostrarUsuarios(HttpServletRequest req, HttpServletResponse res) {
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
-        int id = getIntegerODefault(req, "codigo");
-        usuarioDAO.delete(id);
-        res.sendRedirect(req.getContextPath().concat("/tienda/usuarios/"));
+        req.setAttribute("listaUsuarios", usuarioDAO.getAll());
+        forwardToJsp("/WEB-INF/jsp/usuarios/usuarios.jsp", req, res);
     }
 
-    private static void crearUsuario(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-        UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
+    private void crearUsuario(HttpServletRequest req, HttpServletResponse res) {
 
         String usuario = getCadenaODefault(req, "usuario");
         String password = getCadenaODefault(req, "password");
         String rol = getCadenaODefault(req, "rol");
 
-        ResultadoDeCreacion<Usuario> resultadoDeCreacionDelUsuario =
-                Usuario.crearUsuario(usuario, password, rol);
+        ResultadoDeCreacion<Usuario> logCreacion = Usuario.crearUsuario(usuario, password, rol);
 
-        if (resultadoDeCreacionDelUsuario.esValido())
-            usuarioDAO.create(resultadoDeCreacionDelUsuario.get());
-
-        res.sendRedirect(req.getContextPath().concat("/tienda/usuarios/"));
+        logCreacion
+                .esCorrecto(u -> {
+                    UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
+                    usuarioDAO.create(u);
+                    sendRedirectTo("/tienda/usuarios/", req, res);
+                })
+                .esIncorrecto(e -> {
+                    req.setAttribute("errores", e);
+                    forwardToJsp("/WEB-INF/jsp/usuarios/crear-usuario.jsp", req, res);
+                });
     }
 
-    private void mostrarUsuarios(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
+    private void devolverUsuario(HttpServletRequest req, HttpServletResponse res) {
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
-        req.setAttribute("listaUsuarios", usuarioDAO.getAll());
-        req.getRequestDispatcher("/WEB-INF/jsp/usuarios/usuarios.jsp").forward(req, res);
-    }
-
-    private void crearUsuarioJSP(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/jsp/usuarios/crear-usuario.jsp").forward(req, res);
-    }
-
-    private void editarUsuarioJSP(HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {
-        UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
-
         String pathInfo = req.getPathInfo();
-        String[] pathParts = pathInfo.split("/");
-        String id;
+        int userId = Integer.parseInt(pathInfo.substring(pathInfo.lastIndexOf("/") + 1));
 
-        if (pathParts.length == 3) {
-            try {
-                id = pathParts[2];
-                req.setAttribute("usuario", usuarioDAO.find(Integer.parseInt(id)));
-                req.getRequestDispatcher("/WEB-INF/jsp/usuarios/editar-usuario.jsp").forward(req, res);
-            } catch (NumberFormatException nfe) {
-                nfe.printStackTrace();
-                req.getRequestDispatcher("/WEB-INF/jsp/usuarios/usuarios.jsp").forward(req, res);
-            }
-        }
+        usuarioDAO.find(userId)
+                .ifPresentOrElse((usuario -> {
+                    req.setAttribute("usuario", usuario);
+                    forwardToJsp("/WEB-INF/jsp/usuarios/editar-usuario.jsp", req, res);
+                }), () -> {
+                    sendRedirectTo("/tienda/usuarios/", req, res);
+                });
+
     }
+
+    private void login(HttpServletRequest req, HttpServletResponse res) {
+        String usuario = getCadenaODefault(req, "usuario");
+        String password = getCadenaODefault(req, "password");
+
+        ResultadoDeCreacion<Usuario> logCreacionUsuario = Usuario.login(usuario, password);
+
+        logCreacionUsuario
+                .esCorrecto(u -> {
+                    HttpSession session = req.getSession();
+                    session.setAttribute("usuario", u);
+                    sendToReferer(req, res);
+                }).esIncorrecto(e -> {
+                    req.setAttribute("errores", e);
+                    forwardToJsp("/WEB-INF/jsp/login.jsp", req, res);
+                });
+    }
+
+    private void logout(HttpServletRequest req, HttpServletResponse res) {
+        HttpSession session = req.getSession();
+        session.invalidate();
+        sendToReferer(req, res);
+    }
+
+    private void borrarUsuario(HttpServletRequest req, HttpServletResponse res) {
+        UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
+
+        int userId = getIntegerODefault(req, "codigo");
+
+        usuarioDAO.find(userId)
+                .ifPresent(usuario -> {
+                    usuarioDAO.delete(usuario.getIdUsuario());
+                });
+
+        sendRedirectTo("/tienda/usuarios/", req, res);
+    }
+
+    private void actualizarUsuario(HttpServletRequest req, HttpServletResponse res) {
+
+        UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
+
+        int userId = getIntegerODefault(req, "codigo");
+        String usuario = getCadenaODefault(req, "usuario");
+        String password = getCadenaODefault(req, "password");
+        String rol = getCadenaODefault(req, "rol");
+
+        ResultadoDeValidacion resDeValidacion = Usuario.validar(usuario, password, rol);
+
+        if (resDeValidacion.esValido()) {
+            usuarioDAO.find(userId)
+                    .ifPresent(usuarioEncontrado -> {
+                        usuarioEncontrado.setUsuario(usuario);
+                        usuarioEncontrado.setPassword(password);
+                        usuarioEncontrado.setRol(rol);
+                        usuarioDAO.update(usuarioEncontrado);
+                    });
+        }
+
+        sendRedirectTo("/tienda/usuarios/", req, res);
+    }
+
 }

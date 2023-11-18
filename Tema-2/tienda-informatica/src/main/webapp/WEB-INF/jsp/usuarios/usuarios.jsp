@@ -84,14 +84,14 @@
             animation: border .3ms;
         }
 
-        .icon-svg:hover {
-        }
+        .icon-svg:hover {}
 
         .icon-svg:active {
             display: inline-block;
             position: relative;
             transform: translateY(1px)
         }
+        
     </style>
     <title>Usuario</title>
 </head>
@@ -167,9 +167,9 @@
                 })
                 .toList();
         List<String> columnNamesUsuarios = List.of("ID", "Usuario", "Password", "Rol");
-        List<String> propertyNamesUsuarios = List.of("id", "usuario", "password", "rol");
+        List<String> propertyNamesUsuarios = List.of("idUsuario", "usuario", "password", "rol");
         String elementPathUsuarios = "/tienda/usuarios";
-        String idPropertyNameUsuarios = "id";
+        String idPropertyNameUsuarios = "idUsuario";
         request.setAttribute("columnNames", columnNamesUsuarios);
         request.setAttribute("propertyNames", propertyNamesUsuarios);
         request.setAttribute("elementPath", elementPathUsuarios);

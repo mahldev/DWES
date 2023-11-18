@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="java.util.List" %>
-<%@ page import="org.iesbelen.model.FabricanteDTO" %>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import="org.iesbelen.dto.FabricanteDTO" %>
 
 <!DOCTYPE html>
 <html>
@@ -9,6 +8,7 @@
 
 <head>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/table.css">
     <style>
         * {
             margin: 0;
@@ -37,35 +37,6 @@
             max-width: 1000px;
             margin-left: auto;
             margin-right: auto;
-        }
-
-        table {
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        thead td {
-            font-weight: bold;
-            color: #212529;
-        }
-
-        tbody td {
-            min-width: 200px;
-        }
-
-        th,
-        td {
-            border-bottom: 1px solid #dddddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #d7d7d7;
         }
 
         .wrapper-main {
@@ -100,12 +71,6 @@
             transition: none;
             background: #000;
             color: #fff;
-        }
-
-        .wrapper {
-            display: flex;
-            justify-content: end;
-            gap: .5em;
         }
 
         .icon {
@@ -250,16 +215,16 @@
 
 
     <%
-    List<FabricanteDTO> fabricantes = (List<FabricanteDTO>) request.getAttribute("listaFabricantes");
-    List<String> columnNamesFabricantes = List.of("ID", "Nombre", "Cantidad de productos");
-    List<String> propertyNamesFabricantes = List.of("idFabricante", "nombre", "cantidadProductos");
-    String elementPathFabricantes = "/tienda/fabricantes";
-    String idPropertyNameFabricantes = "idFabricante";
-    request.setAttribute("columnNames", columnNamesFabricantes);
-    request.setAttribute("propertyNames", propertyNamesFabricantes);
-    request.setAttribute("elementPath", elementPathFabricantes);
-    request.setAttribute("idPropertyName", idPropertyNameFabricantes);
-    request.setAttribute("listaElementos", fabricantes);
+        List<FabricanteDTO> fabricantes = (List<FabricanteDTO>) request.getAttribute("listaFabricantes");
+        List<String> columnNamesFabricantes = List.of("ID", "Nombre", "Cantidad de productos");
+        List<String> propertyNamesFabricantes = List.of("idFabricante", "nombre", "cantidadProductos");
+        String elementPathFabricantes = "/tienda/fabricantes";
+        String idPropertyNameFabricantes = "idFabricante";
+        request.setAttribute("columnNames", columnNamesFabricantes);
+        request.setAttribute("propertyNames", propertyNamesFabricantes);
+        request.setAttribute("elementPath", elementPathFabricantes);
+        request.setAttribute("idPropertyName", idPropertyNameFabricantes);
+        request.setAttribute("listaElementos", fabricantes);
     %>
     <%@ include file="../../components/table.jspf" %>
 </main>

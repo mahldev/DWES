@@ -123,7 +123,6 @@
             <option value="Vendedor">Vendedor</option>
             <option value="Cliente">Cliente</option>
         </select>
-
     </form>
 </main>
 </body>

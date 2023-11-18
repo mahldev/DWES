@@ -3,8 +3,8 @@ package org.iesbelen.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.iesbelen.dto.FabricanteDTO;
 import org.iesbelen.model.Fabricante;
-import org.iesbelen.model.FabricanteDTO;
 
 public interface FabricanteDAO {
 

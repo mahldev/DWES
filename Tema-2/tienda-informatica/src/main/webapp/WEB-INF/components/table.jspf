@@ -1,11 +1,15 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.lang.reflect.Method" %>
+<%@ page import="org.iesbelen.model.Usuario" %>
 
 <%
     List<String> columnNames = (List<String>) request.getAttribute("columnNames");
     List<String> propertyNames = (List<String>) request.getAttribute("propertyNames");
     String elementPath = (String) request.getAttribute("elementPath");
     String idPropertyName = (String) request.getAttribute("idPropertyName");
+    Usuario usuario = (Usuario) session.getAttribute("usuario");
+    boolean estaLogeado = usuario != null;
+    usuario = usuario != null ? usuario : new Usuario();
 %>
 
 <table>
@@ -15,8 +19,12 @@
         <% for (String columnName : columnNames) { %>
         <th><%=columnName%>
         </th>
-        <% } %>
+        <% }
+
+            if (estaLogeado && "Administrador".equals(usuario.getRol()) ||
+                    estaLogeado && ("idFabricante".equals(idPropertyName) || "idProducto".equals(idPropertyName)) && "Vendedor".equals(usuario.getRol())) { %>
         <th></th>
+        <% }%>
 
     </tr>
     </thead>
@@ -30,7 +38,11 @@
         <td>
             <%=getPropertyValue(elemento, propertyName)%>
         </td>
-        <% } %>
+        <% }
+
+            if (estaLogeado && "Administrador".equals(usuario.getRol()) ||
+                    estaLogeado && ("idFabricante".equals(idPropertyName) || "idProducto".equals(idPropertyName)) && "Vendedor".equals(usuario.getRol())) {
+        %>
         <td>
             <div class="wrapper">
                 <form action="${pageContext.request.contextPath}<%=elementPath%>/editar/<%=getPropertyValue(elemento, idPropertyName)%>">
@@ -64,6 +76,7 @@
         </td>
     </tr>
     <% }
+    }
     } %>
     </tbody>
 </table>

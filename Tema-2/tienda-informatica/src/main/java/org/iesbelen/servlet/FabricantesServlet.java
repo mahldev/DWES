@@ -2,7 +2,6 @@ package org.iesbelen.servlet;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import jakarta.servlet.RequestDispatcher;
@@ -15,8 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.iesbelen.dao.FabricanteDAO;
 import org.iesbelen.dao.FabricanteDAOImpl;
 import org.iesbelen.model.Fabricante;
-import org.iesbelen.model.FabricanteDTO;
-import org.iesbelen.util.HTTPRequestUtil;
+import org.iesbelen.dto.FabricanteDTO;
 
 import static java.util.Objects.isNull;
 

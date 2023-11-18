@@ -1,4 +1,6 @@
-package org.iesbelen.model;
+package org.iesbelen.dto;
+
+import org.iesbelen.model.Fabricante;
 
 public class FabricanteDTO extends Fabricante {
 

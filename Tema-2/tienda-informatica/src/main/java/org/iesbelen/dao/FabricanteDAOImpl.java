@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.iesbelen.dto.FabricanteDTO;
 import org.iesbelen.model.Fabricante;
-import org.iesbelen.model.FabricanteDTO;
 
-import static org.iesbelen.model.FabricanteDTO.crearFabricanteDTOdeFabricante;
+import static org.iesbelen.dto.FabricanteDTO.crearFabricanteDTOdeFabricante;
 
 public class FabricanteDAOImpl extends AbstractDAOImpl implements FabricanteDAO {
 

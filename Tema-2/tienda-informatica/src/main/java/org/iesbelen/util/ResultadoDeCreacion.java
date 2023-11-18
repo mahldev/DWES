@@ -1,5 +1,7 @@
 package org.iesbelen.util;
 
+import java.util.function.Consumer;
+
 public class ResultadoDeCreacion<T> {
 
     private final T objeto;
@@ -25,5 +27,21 @@ public class ResultadoDeCreacion<T> {
 
     public ResultadoDeValidacion getErrores() {
         return errores;
+    }
+
+    public ResultadoDeCreacion<T> esCorrecto(Consumer<T> consumidor) {
+        if (esValido()) {
+            consumidor.accept(objeto);
+        }
+
+        return this;
+    }
+
+    public ResultadoDeCreacion<T> esIncorrecto(Consumer<ResultadoDeValidacion> consumidor) {
+        if (!esValido()) {
+            consumidor.accept(errores);
+        }
+
+        return this;
     }
 }

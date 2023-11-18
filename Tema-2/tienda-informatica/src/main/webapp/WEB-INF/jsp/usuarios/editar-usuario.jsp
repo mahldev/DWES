@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@page import="org.iesbelen.model.Producto" %>
 <%@page import="java.util.Optional" %>
-<%@ page import="java.util.List" %>
-<%@ page import="org.iesbelen.model.Fabricante" %>
+<%@ page import="org.iesbelen.model.Usuario" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,7 +84,7 @@
             border: 1px solid #ddd;
             border-radius: 3px;
         }
-        
+
         #datos input:focus,
         #datos select:focus {
             outline: none;
@@ -99,42 +97,33 @@
 <%@include file="../../components/header.jspf" %>
 
 <main>
-    <% Optional<Producto> optProd = (Optional<Producto>) request.getAttribute("producto");
-        List<Fabricante> fabricantes = (List<Fabricante>) request.getAttribute("fabricantes");
-        if (optProd.isPresent()) {
-    %>
+    <% Usuario usuario = (Usuario) request.getAttribute("usuario"); %>
     <div class="wrapper-main">
-        <h3>Editar Producto</h3>
-        <button form="datos" class="crearNuevoFab-Button">Guardar</button>
+        <h3>Editar Usuario</h3>
+        <button form="datos" class="button">Guardar</button>
     </div>
 
 
-    <form id="datos" action="${pageContext.request.contextPath}/tienda/productos/editar/" method="post">
+    <form id="datos" action="${pageContext.request.contextPath}/tienda/usuarios/<%=usuario.getIdUsuario()%>" method="post">
         <input type="hidden" name="__method__" value="put"/>
 
         <label for="codigo">Código</label>
-        <input type="text" name="codigo" id="codigo" value="<%=optProd.get().getIdProducto()%>">
+        <input type="text" name="codigo" id="codigo" value="<%=usuario.getIdUsuario()%>">
 
-        <label for="nombre">Nombre</label>
-        <input type="text" name="nombre" id="nombre" value="<%=optProd.get().getNombre()%>">
+        <label for="usuario">Usuario</label>
+        <input type="text" name="usuario" id="usuario" value="<%=usuario.getUsuario()%>">
 
-        <label for="precio">Precio</label>
-        <input type="text" name="precio" id="precio" value="<%=optProd.get().getPrecio()%>">
+        <label for="password">Password</label>
+        <input type="text" name="password" id="password" value="<%=usuario.getPassword()%>">
 
-        <label for="fabricante">Fabricante</label>
-        <select id="fabricante" name="fabricante">
-            <% for (Fabricante fabricante : fabricantes) {
-                Integer value = fabricante.getIdFabricante();
-            %>
-            <option value="<%=value%>" <%=optProd.get().getCodigo_fabricante() == value ? "selected" : ""%>><%=fabricante.getNombre()%>
-            </option>
-            <% } %>
+        <label for="rol">Rol</label>
+        <select id="rol" name="rol">
+            <option value="Administrador" <%="Administrador".equals(usuario.getRol()) ? "selected" : "" %>>Administrador</option>
+            <option value="Vendedor" <%="Vendedor".equals(usuario.getRol()) ? "selected" : "" %>>Vendedor</option>
+            <option value="Cliente" <%="Cliente".equals(usuario.getRol()) ? "selected" : "" %>>Cliente</option>
         </select>
 
     </form>
-    <% } else { %>
-    <h2>404 - Error: No se encontró el producto</h2>
-    <%}%>
 </main>
 
 </body>

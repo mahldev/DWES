@@ -1,21 +1,31 @@
 <link rel="stylesheet" href="../../css/header.css">
+<%
+    String basePath = request.getContextPath().concat("/tienda");
+%>
 
 <header class="Header">
     <nav class="Header-nav--Nav">
 
         <ul class="Nav-ul">
             <li><a href="${pageContext.request.contextPath}/index.jsp">Inicio</a></li>
-            <li><a href="${pageContext.request.contextPath}/tienda/fabricantes/">Fabricantes</a></li>
-            <li><a href="${pageContext.request.contextPath}/tienda/productos/">Productos</a></li>
-            <li><a href="${pageContext.request.contextPath}/tienda/usuarios/">Usuarios</a></li>
+            <li><a href="<%=basePath%>/fabricantes/">Fabricantes</a></li>
+            <li><a href="<%=basePath%>/productos/">Productos</a></li>
+            <li><a href="<%=basePath%>/usuarios/">Usuarios</a></li>
         </ul>
 
         <div class="wrapper">
             <ul class="Nav-ul">
+                <% if (session.getAttribute("usuario") != null) { %>
+                <button form="cerrarSesion" class="button-login">Cerrar Sesion</button>
+            
+                <% } else { %>
                 <button form="iniciarSesion" class="button-login">Iniciar Sesion</button>
+                
+                <% } %>
             </ul>
         </div>
 
-        <form hidden id="iniciarSesion" action="${pageContext.request.contextPath}/tienda/usuarios/login/"></form>
+        <form hidden id="iniciarSesion" action="<%=basePath%>/usuarios/login/"></form>
+        <form hidden id="cerrarSesion" action="<%=basePath%>/usuarios/logout/" method="post"></form>
     </nav>
 </header>
