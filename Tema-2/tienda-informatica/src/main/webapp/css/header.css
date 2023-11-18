@@ -30,7 +30,7 @@ a {
   transition: all 0.3s ease;
   position: relative;
   border-radius: 20px;
-  border: 2px solid;
+  border: 2px solid #000;
   outline: none;
   background-color: #000;
 }

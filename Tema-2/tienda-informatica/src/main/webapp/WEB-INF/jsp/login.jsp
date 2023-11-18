@@ -43,7 +43,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             border-radius: 20px;
-            border: 2px solid;
+            border: 2px solid #000;
             outline: none;
             background: #000;
             min-width: 130px;
