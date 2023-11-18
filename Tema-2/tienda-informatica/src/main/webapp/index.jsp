@@ -21,7 +21,8 @@
     <title>Inicio</title>
 </head>
 <body>
-    <%@include file="./WEB-INF/components/header.jspf"%>
+
+    <%@include file="WEB-INF/components/header.jspf"%>
 
     <main>
 
