@@ -53,7 +53,7 @@ public class UsuarioServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) {
-        handleRequest(req, res, getRoutes);
+        manejarRequest(req, res, getRoutes);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class UsuarioServlet extends HttpServlet {
         String __method__ = req.getParameter("__method__");
 
         if (isNull(__method__))
-            handleRequest(req, res, postRoutes);
+            manejarRequest(req, res, postRoutes);
 
         if ("put".equals(__method__))
             doPut(req, res);
@@ -72,12 +72,12 @@ public class UsuarioServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse res) {
-        handleRequest(req, res, putRoutes);
+        manejarRequest(req, res, putRoutes);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse res) {
-        handleRequest(req, res, deleteRoutes);
+        manejarRequest(req, res, deleteRoutes);
     }
 
     private void mostrarUsuarios(HttpServletRequest req, HttpServletResponse res) {

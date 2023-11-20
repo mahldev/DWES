@@ -51,7 +51,7 @@ public class HTTPRequestUtil {
         }
     }
 
-    public static void handleRequest(HttpServletRequest req, HttpServletResponse resp,
+    public static void manejarRequest(HttpServletRequest req, HttpServletResponse resp,
             Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> routes) {
 
         String path = req.getRequestURI().substring(req.getContextPath().length());
@@ -65,16 +65,14 @@ public class HTTPRequestUtil {
             path += "/";
         }
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> handler = findHandler(path, routes);
+        BiConsumer<HttpServletRequest, HttpServletResponse> handler = encontrarManejador(path, routes);
 
         if (nonNull(handler)) {
             handler.accept(req, resp);
-        } else {
-            sendRedirectTo("/", req, resp);
-        }
+        } 
     }
 
-    private static BiConsumer<HttpServletRequest, HttpServletResponse> findHandler(
+    private static BiConsumer<HttpServletRequest, HttpServletResponse> encontrarManejador(
             String path, Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> routes) {
         return routes.entrySet().stream()
                 .filter(entry -> path.matches(entry.getKey()))
