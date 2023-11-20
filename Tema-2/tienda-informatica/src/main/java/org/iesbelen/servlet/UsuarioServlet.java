@@ -17,43 +17,38 @@ import org.iesbelen.util.ResultadoDeValidacion;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "usuarioServlet", value = "/tienda/usuarios/*")
 public class UsuarioServlet extends HttpServlet {
 
-    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> getRoutes = new HashMap<>();
-    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> postRoutes = new HashMap<>();
-    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> putRoutes = new HashMap<>();
-    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> deleteRoutes = new HashMap<>();
+    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasGET = new HashMap<>();
+    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasPOST = new HashMap<>();
+    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasPUT = new HashMap<>();
+    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasDELETE = new HashMap<>();
 
     @Override
     public void init() {
         // GET
-        getRoutes.put("/tienda/usuarios/", this::mostrarUsuarios);
-        getRoutes.put("/tienda/usuarios/editar/\\d+/?", this::devolverUsuario);
-        getRoutes.put("/tienda/usuarios/crear/",
+        rutasGET.put("/tienda/usuarios/", this::mostrarUsuarios);
+        rutasGET.put("/tienda/usuarios/editar/\\d+/?", this::devolverUsuario);
+        rutasGET.put("/tienda/usuarios/crear/",
                 (req, res) -> forwardToJsp("/WEB-INF/jsp/usuarios/crear-usuario.jsp", req, res));
-        getRoutes.put("/tienda/usuarios/editar/",
+        rutasGET.put("/tienda/usuarios/editar/",
                 (req, res) -> forwardToJsp("/WEB-INF/jsp/usuarios/editar-usuario.jsp", req, res));
-        getRoutes.put("/tienda/usuarios/login/",
-                (req, res) -> forwardToJsp("/WEB-INF/jsp/login.jsp", req, res));
 
         // POST
-        postRoutes.put("/tienda/usuarios/", this::crearUsuario);
-        postRoutes.put("/tienda/usuarios/login/", this::login);
-        postRoutes.put("/tienda/usuarios/logout/", this::logout);
+        rutasPOST.put("/tienda/usuarios/", this::crearUsuario);
 
         // PUT
-        putRoutes.put("/tienda/usuarios/\\d+/?", this::actualizarUsuario);
+        rutasPUT.put("/tienda/usuarios/\\d+/?", this::actualizarUsuario);
 
         // DELETE
-        deleteRoutes.put("/tienda/usuarios/borrar/", this::borrarUsuario);
+        rutasDELETE.put("/tienda/usuarios/borrar/", this::borrarUsuario);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, getRoutes);
+        manejarRequest(req, res, rutasGET);
     }
 
     @Override
@@ -61,7 +56,7 @@ public class UsuarioServlet extends HttpServlet {
         String __method__ = req.getParameter("__method__");
 
         if (isNull(__method__))
-            manejarRequest(req, res, postRoutes);
+            manejarRequest(req, res, rutasPOST);
 
         if ("put".equals(__method__))
             doPut(req, res);
@@ -72,12 +67,12 @@ public class UsuarioServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, putRoutes);
+        manejarRequest(req, res, rutasPUT);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, deleteRoutes);
+        manejarRequest(req, res, rutasDELETE);
     }
 
     private void mostrarUsuarios(HttpServletRequest req, HttpServletResponse res) {
@@ -119,29 +114,6 @@ public class UsuarioServlet extends HttpServlet {
                     sendRedirectTo("/tienda/usuarios/", req, res);
                 });
 
-    }
-
-    private void login(HttpServletRequest req, HttpServletResponse res) {
-        String usuario = getCadenaODefault(req, "usuario");
-        String password = getCadenaODefault(req, "password");
-
-        ResultadoDeCreacion<Usuario> logCreacionUsuario = Usuario.login(usuario, password);
-
-        logCreacionUsuario
-                .esCorrecto(u -> {
-                    HttpSession session = req.getSession();
-                    session.setAttribute("usuario", u);
-                    sendToReferer(req, res);
-                }).esIncorrecto(e -> {
-                    req.setAttribute("errores", e);
-                    forwardToJsp("/WEB-INF/jsp/login.jsp", req, res);
-                });
-    }
-
-    private void logout(HttpServletRequest req, HttpServletResponse res) {
-        HttpSession session = req.getSession();
-        session.invalidate();
-        sendToReferer(req, res);
     }
 
     private void borrarUsuario(HttpServletRequest req, HttpServletResponse res) {

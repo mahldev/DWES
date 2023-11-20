@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <form hidden id="iniciarSesion" action="<%=basePath%>/usuarios/login/"></form>
-        <form hidden id="cerrarSesion" action="<%=basePath%>/usuarios/logout/" method="post"></form>
+        <form hidden id="iniciarSesion" action="<%=basePath%>/login/login/"></form>
+        <form hidden id="cerrarSesion" action="<%=basePath%>/login/logout/" method="post"></form>
     </nav>
 </header>
