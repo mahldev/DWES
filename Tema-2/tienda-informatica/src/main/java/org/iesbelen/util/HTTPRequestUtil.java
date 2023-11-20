@@ -1,9 +1,8 @@
 package org.iesbelen.util;
 
-import static java.util.Objects.nonNull;
-
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import jakarta.servlet.ServletException;
@@ -51,34 +50,33 @@ public class HTTPRequestUtil {
         }
     }
 
-    public static void manejarRequest(HttpServletRequest req, HttpServletResponse resp,
+    public static void manejarRequest(HttpServletRequest req, HttpServletResponse res,
             Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> routes) {
 
         String path = req.getRequestURI().substring(req.getContextPath().length());
-        String method = req.getParameter("__method__");
-
-        System.out.println(req.getMethod());
-        System.out.println(method);
-        System.out.println(path);
 
         if (!path.endsWith("/")) {
             path += "/";
         }
 
-        BiConsumer<HttpServletRequest, HttpServletResponse> handler = encontrarManejador(path, routes);
-
-        if (nonNull(handler)) {
-            handler.accept(req, resp);
-        } 
+        encontrarManejador(path, routes)
+                .ifPresentOrElse(
+                        (ruta) -> ruta.accept(req, res),
+                        () -> {
+                            try {
+                                res.sendError(404, "No se ha encontrado la ruta solicitada");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
     }
 
-    private static BiConsumer<HttpServletRequest, HttpServletResponse> encontrarManejador(
+    private static Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> encontrarManejador(
             String path, Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> routes) {
         return routes.entrySet().stream()
                 .filter(entry -> path.matches(entry.getKey()))
                 .findFirst()
-                .map(Map.Entry::getValue)
-                .orElse(null);
+                .map(Map.Entry::getValue);
     }
 
     public static void sendToReferer(HttpServletRequest req, HttpServletResponse res) {
