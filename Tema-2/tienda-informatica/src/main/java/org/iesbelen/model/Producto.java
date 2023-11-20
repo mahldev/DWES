@@ -1,8 +1,5 @@
 package org.iesbelen.model;
 
-
-import jakarta.servlet.http.HttpServletRequest;
-import org.iesbelen.util.ResultadoDeCreacion;
 import org.iesbelen.util.ResultadoDeValidacion;
 
 public class Producto {
@@ -45,7 +42,7 @@ public class Producto {
     }
 
     public static ResultadoDeValidacion validar(String nombre,
-                                                Double precio) {
+            Double precio) {
         ResultadoDeValidacion validaciones = new ResultadoDeValidacion();
 
         if (nombre == null || nombre.trim().isBlank()) {
@@ -69,8 +66,10 @@ public class Producto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Producto)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Producto))
+            return false;
 
         Producto producto = (Producto) o;
 

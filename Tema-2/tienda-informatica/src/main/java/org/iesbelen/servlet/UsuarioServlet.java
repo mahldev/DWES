@@ -3,17 +3,17 @@ package org.iesbelen.servlet;
 import static java.util.Objects.isNull;
 import static org.iesbelen.util.HTTPRequestUtil.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import jakarta.servlet.annotation.WebServlet;
 import org.iesbelen.dao.UsuarioDAO;
 import org.iesbelen.dao.UsuarioDAOImpl;
 import org.iesbelen.model.Usuario;
 import org.iesbelen.util.ResultadoDeCreacion;
-import org.iesbelen.util.ResultadoDeValidacion;
 
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -122,7 +122,7 @@ public class UsuarioServlet extends HttpServlet {
         int userId = getIntegerODefault(req, "codigo");
 
         usuarioDAO.find(userId)
-                .ifPresent(usuario -> {
+                .ifPresent((usuario) -> {
                     usuarioDAO.delete(usuario.getIdUsuario());
                 });
 
@@ -138,19 +138,23 @@ public class UsuarioServlet extends HttpServlet {
         String password = getCadenaODefault(req, "password");
         String rol = getCadenaODefault(req, "rol");
 
-        ResultadoDeValidacion resDeValidacion = Usuario.validar(usuario, password, rol);
-
-        if (resDeValidacion.esValido()) {
-            usuarioDAO.find(userId)
-                    .ifPresent(usuarioEncontrado -> {
-                        usuarioEncontrado.setUsuario(usuario);
-                        usuarioEncontrado.setPassword(password);
-                        usuarioEncontrado.setRol(rol);
-                        usuarioDAO.update(usuarioEncontrado);
-                    });
-        }
-
-        sendRedirectTo("/tienda/usuarios/", req, res);
+        Usuario.validar(usuario, password, rol)
+                .esCorrecto(() -> {
+                    usuarioDAO.find(userId)
+                            .ifPresent(usuarioEncontrado -> {
+                                usuarioEncontrado.setUsuario(usuario);
+                                usuarioEncontrado.setPassword(password);
+                                usuarioEncontrado.setRol(rol);
+                                usuarioDAO.update(usuarioEncontrado);
+                                sendRedirectTo("/tienda/usuarios/", req, res);
+                            });
+                }).esIncorrecto((errors) -> {
+                    try {
+                        res.sendError(400, errors.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
 }

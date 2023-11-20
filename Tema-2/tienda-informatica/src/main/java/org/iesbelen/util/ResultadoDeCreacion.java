@@ -44,4 +44,10 @@ public class ResultadoDeCreacion<T> {
 
         return this;
     }
+
+    @Override
+    public String toString() {
+        return errores.toString();
+    }
+
 }

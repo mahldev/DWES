@@ -99,13 +99,13 @@
 <%@include file="../../components/header.jspf" %>
 
 <main>
-    <% Optional<Producto> optProd = (Optional<Producto>) request.getAttribute("producto");
+    <%  Producto optProd = (Producto) request.getAttribute("producto");
         List<Fabricante> fabricantes = (List<Fabricante>) request.getAttribute("fabricantes");
-        if (optProd.isPresent()) {
     %>
+
     <div class="wrapper-main">
         <h3>Editar Producto</h3>
-        <button form="datos" class="crearNuevoFab-Button">Guardar</button>
+        <button form="datos" class="button">Guardar</button>
     </div>
 
 
@@ -113,28 +113,24 @@
         <input type="hidden" name="__method__" value="put"/>
 
         <label for="codigo">Código</label>
-        <input type="text" name="codigo" id="codigo" value="<%=optProd.get().getIdProducto()%>">
+        <input type="text" name="codigo" id="codigo" value="<%=optProd.getIdProducto()%>">
 
         <label for="nombre">Nombre</label>
-        <input type="text" name="nombre" id="nombre" value="<%=optProd.get().getNombre()%>">
+        <input type="text" name="nombre" id="nombre" value="<%=optProd.getNombre()%>">
 
         <label for="precio">Precio</label>
-        <input type="text" name="precio" id="precio" value="<%=optProd.get().getPrecio()%>">
+        <input type="text" name="precio" id="precio" value="<%=optProd.getPrecio()%>">
 
         <label for="fabricante">Fabricante</label>
         <select id="fabricante" name="fabricante">
             <% for (Fabricante fabricante : fabricantes) {
                 Integer value = fabricante.getIdFabricante();
             %>
-            <option value="<%=value%>" <%=optProd.get().getCodigo_fabricante() == value ? "selected" : ""%>><%=fabricante.getNombre()%>
-            </option>
+            <option value="<%=value%>" <%=optProd.getCodigo_fabricante() == value ? "selected" : ""%>><%=fabricante.getNombre()%></option>
             <% } %>
         </select>
 
     </form>
-    <% } else { %>
-    <h2>404 - Error: No se encontró el producto</h2>
-    <%}%>
 </main>
 
 </body>

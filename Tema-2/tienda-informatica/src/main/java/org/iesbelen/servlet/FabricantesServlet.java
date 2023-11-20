@@ -50,9 +50,9 @@ public class FabricantesServlet extends HttpServlet {
             }
             List<FabricanteDTO> listFabDTO = fabDAO.getAllDTOPlusCountProductos(ordPor, ascDesc);
 
-            //GET
-            //	/fabricantes/
-            //	/fabricantes
+            // GET
+            // /fabricantes/
+            // /fabricantes
 
             request.setAttribute("listaFabricantes", listFabDTO);
             request.setAttribute("ordPor", ordPor);
@@ -62,12 +62,12 @@ public class FabricantesServlet extends HttpServlet {
 
         } else {
             // GET
-            // 		/fabricantes/{id}
-            // 		/fabricantes/{id}/
-            // 		/fabricantes/edit/{id}
-            // 		/fabricantes/edit/{id}/
-            // 		/fabricantes/crear
-            // 		/fabricantes/crear/
+            // /fabricantes/{id}
+            // /fabricantes/{id}/
+            // /fabricantes/edit/{id}
+            // /fabricantes/edit/{id}/
+            // /fabricantes/crear
+            // /fabricantes/crear/
 
             pathInfo = pathInfo.replaceAll("/$", "");
             String[] pathParts = pathInfo.split("/");
@@ -86,8 +86,8 @@ public class FabricantesServlet extends HttpServlet {
                 final Optional<Fabricante> fabricante = fabDAO.find(idFabricante);
                 final Optional<Integer> cantidadProductos = fabDAO.getCountProductos(idFabricante);
 
-                final Optional<FabricanteDTO> fabricanteDTO = fabricante.map(fab ->
-                        FabricanteDTO.crearFabricanteDTOdeFabricante(fab, cantidadProductos.orElse(0)));
+                final Optional<FabricanteDTO> fabricanteDTO = fabricante
+                        .map(fab -> FabricanteDTO.crearFabricanteDTOdeFabricante(fab, cantidadProductos.orElse(0)));
 
                 try {
                     request.setAttribute("fabricante", fabricanteDTO);
@@ -124,7 +124,6 @@ public class FabricantesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        RequestDispatcher dispatcher;
         String __method__ = request.getParameter("__method__");
 
         if (__method__ == null) {
@@ -140,21 +139,22 @@ public class FabricantesServlet extends HttpServlet {
 
         } else if ("put".equalsIgnoreCase(__method__)) {
             // Actualizar uno existente
-            //Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización PUT.
+            // Dado que los forms de html sólo soportan method GET y POST utilizo parámetro
+            // oculto para indicar la operación de actulización PUT.
             doPut(request, response);
 
         } else if ("delete".equalsIgnoreCase(__method__)) {
             // Borrar uno existente
-            //Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización DELETE.
+            // Dado que los forms de html sólo soportan method GET y POST utilizo parámetro
+            // oculto para indicar la operación de actulización DELETE.
             doDelete(request, response);
         } else {
             System.out.println("Opción POST no soportada.");
         }
 
-        //response.sendRedirect("../../../tienda/fabricantes");
+        // response.sendRedirect("../../../tienda/fabricantes");
         response.sendRedirect(request.getContextPath() + "/tienda/fabricantes");
     }
-
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response)
@@ -180,7 +180,6 @@ public class FabricantesServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
-        RequestDispatcher dispatcher;
         FabricanteDAO fabDAO = new FabricanteDAOImpl();
         String codigo = request.getParameter("codigo");
 

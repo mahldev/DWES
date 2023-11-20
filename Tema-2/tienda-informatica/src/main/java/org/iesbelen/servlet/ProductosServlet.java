@@ -1,6 +1,5 @@
 package org.iesbelen.servlet;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,14 +10,13 @@ import org.iesbelen.dao.FabricanteDAOImpl;
 import org.iesbelen.dao.ProductoDAO;
 import org.iesbelen.dao.ProductoDAOImpl;
 import org.iesbelen.model.Fabricante;
-import org.iesbelen.model.Producto;
 import org.iesbelen.service.ProductoService;
 import org.iesbelen.util.HTTPRequestUtil;
-import org.iesbelen.util.ResultadoDeCreacion;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 import static org.iesbelen.util.HTTPRequestUtil.*;
 
@@ -27,174 +25,169 @@ public class ProductosServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * HTTP Method: GET
-     * Paths:
-     * /productos/
-     * /productos/{id}
-     * /productos/editar{id}
-     * /productos/crear
-     */
+    private Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasGET = new HashMap<>();
+    private Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasPOST = new HashMap<>();
+    private Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasPUT = new HashMap<>();
+    private Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasDELETE = new HashMap<>();
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void init() {
+        // GET
+        rutasGET.put("/tienda/productos/", this::mostrarProductos);
+        rutasGET.put("/tienda/productos/editar/\\d+/?", this::devolverProducto);
+        rutasGET.put("/tienda/productos/crear/", this::devolverJSPCrearProducto);
 
-        RequestDispatcher dispatcher;
+        // POST
+        rutasPOST.put("/tienda/productos/", this::crearProducto);
 
-        String pathInfo = request.getPathInfo(); //
+        // PUT
+        rutasPUT.put("/tienda/productos/editar/", this::modificarProducto);
 
-        if (pathInfo == null || "/".equals(pathInfo)) {
-            ProductoDAO fabDAO = new ProductoDAOImpl();
-
-            //GET
-            //	/productos/
-            //	/productos
-            String searchFormHidden = request.getParameter("searchFormHidden");
-            String nombreFiltro = HTTPRequestUtil.getCadenaODefault(request, "filtrar-por-nombre");
-
-            request.setAttribute("listaProductos", fabDAO.getAll(nombreFiltro));
-            request.setAttribute("searchQuery", nombreFiltro);
-            request.setAttribute("searchFormHidden", searchFormHidden);
-            dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/productos.jsp");
-
-        } else {
-            // GET
-            // 		/productos/{id}
-            // 		/productos/{id}/
-            // 		/productos/edit/{id}
-            // 		/productos/edit/{id}/
-            // 		/productos/crear
-            // 		/productos/crear/
-
-            pathInfo = pathInfo.replaceAll("/$", "");
-            String[] pathParts = pathInfo.split("/");
-
-            if (pathParts.length == 2 && "crear".equals(pathParts[1])) {
-
-                // GET
-                // /productos/crear
-                FabricanteDAO fabDAO = new FabricanteDAOImpl();
-
-                List<String> listaNombreFabricante = fabDAO.getAll()
-                        .stream()
-                        .map(Fabricante::getNombre)
-                        .toList();
-
-                request.setAttribute("fabricantes", listaNombreFabricante);
-                dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/crear-producto.jsp");
-
-            } else if (pathParts.length == 2) {
-                ProductoDAO fabDAO = new ProductoDAOImpl();
-                // GET
-                // /productos/{id}
-                try {
-                    request.setAttribute("producto", fabDAO.find(Integer.parseInt(pathParts[1])));
-                    dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/detalle-producto.jsp");
-
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                    dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/productos.jsp");
-                }
-
-            } else if (pathParts.length == 3 && "editar".equals(pathParts[1])) {
-                ProductoDAO prodDAO = new ProductoDAOImpl();
-                FabricanteDAO fabDao = new FabricanteDAOImpl();
-                // GET
-                // /productos/editar/{id}
-                try {
-                    request.setAttribute("fabricantes", fabDao.getAll());
-                    request.setAttribute("producto", prodDAO.find(Integer.parseInt(pathParts[2])));
-                    dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/editar-producto.jsp");
-
-                } catch (NumberFormatException nfe) {
-                    nfe.printStackTrace();
-                    dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/productos.jsp");
-                }
-
-
-            } else {
-
-                System.out.println("Opción POST no soportada.");
-                dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/productos/productos.jsp");
-
-            }
-
-        }
-
-        dispatcher.forward(request, response);
-
+        // DELETE
+        rutasDELETE.put("/tienda/productos/borrar/", this::eliminarProducto);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        RequestDispatcher dispatcher;
-        String __method__ = request.getParameter("__method__");
-
-        if (__method__ == null) {
-            // Crear uno nuevo
-            ProductoDAO prodDAO = new ProductoDAOImpl();
-            String nombre = getCadenaODefault(request, "nombre");
-            Double precio = getDoubleODefault(request, "precio");
-            String fabricante = getCadenaODefault(request, "fabricante");
-
-            ResultadoDeCreacion<Producto> prod =
-                    ProductoService.crearProducto(nombre, precio, fabricante);
-
-            if (prod.esValido()) prodDAO.create(prod.get());
-
-        } else if ("put".equalsIgnoreCase(__method__)) {
-            // Actualizar uno existente
-            //Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización PUT.
-            doPut(request, response);
-
-        } else if ("delete".equalsIgnoreCase(__method__)) {
-            // Actualizar uno existente
-            //Dado que los forms de html sólo soportan method GET y POST utilizo parámetro oculto para indicar la operación de actulización DELETE.
-            doDelete(request, response);
-
-        } else {
-            System.out.println("Opción POST no soportada.");
-        }
-
-        //response.sendRedirect("../../../tienda/productos");
-        response.sendRedirect(request.getContextPath() + "/tienda/productos");
+    protected void doGet(HttpServletRequest req, HttpServletResponse res) {
+        manejarRequest(req, res, rutasGET);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException {
+
+        String __method__ = req.getParameter("__method__");
+
+        if (__method__ == null)
+            manejarRequest(req, res, rutasPOST);
+
+        if ("put".equalsIgnoreCase(__method__))
+            doPut(req, res);
+
+        if ("delete".equalsIgnoreCase(__method__))
+            doDelete(req, res);
+    }
 
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse res) {
+        manejarRequest(req, res, rutasPUT);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse res) {
+        manejarRequest(req, res, rutasDELETE);
+    }
+
+    private void mostrarProductos(HttpServletRequest req, HttpServletResponse res) {
+        ProductoDAO fabDAO = new ProductoDAOImpl();
+
+        String searchFormHidden = req.getParameter("searchFormHidden");
+        String nombreFiltro = HTTPRequestUtil.getCadenaODefault(req, "filtrar-por-nombre");
+
+        req.setAttribute("listaProductos", fabDAO.getAll(nombreFiltro));
+        req.setAttribute("searchQuery", nombreFiltro);
+        req.setAttribute("searchFormHidden", searchFormHidden);
+
+        forwardToJsp("/WEB-INF/jsp/productos/productos.jsp", req, res);
+    }
+
+    private void devolverProducto(HttpServletRequest req, HttpServletResponse res) {
+
+        ProductoDAO productoDAO = new ProductoDAOImpl();
+        FabricanteDAO fabDAO = new FabricanteDAOImpl();
+        String pathInfo = req.getPathInfo();
+
+        int idProducto = Integer.parseInt(pathInfo.substring(pathInfo.lastIndexOf("/") + 1));
+
+        productoDAO.find(idProducto)
+                .ifPresentOrElse((producto) -> {
+                    req.setAttribute("fabricantes", fabDAO.getAll());
+                    req.setAttribute("producto", producto);
+                    forwardToJsp("/WEB-INF/jsp/productos/editar-producto.jsp", req, res);
+                },
+                        () -> {
+                            try {
+                                res.sendError(404, "No se ha encontrado el producto");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+    }
+
+    private void devolverJSPCrearProducto(HttpServletRequest req, HttpServletResponse res) {
+        FabricanteDAO fabDAO = new FabricanteDAOImpl();
+
+        req.setAttribute("fabricantes", fabDAO.getAll()
+                .stream()
+                .map(Fabricante::getNombre)
+                .toList());
+
+        forwardToJsp("/WEB-INF/jsp/productos/crear-producto.jsp", req, res);
+    }
+
+    private void crearProducto(HttpServletRequest req, HttpServletResponse res) {
         ProductoDAO prodDAO = new ProductoDAOImpl();
 
-        int codigo = getIntegerODefault(request, "codigo");
-        String nombre = getCadenaODefault(request, "nombre");
-        Double precio = getDoubleODefault(request, "precio");
-        Integer idFabricante = getIntegerODefault(request, "fabricante");
+        String nombre = getCadenaODefault(req, "nombre");
+        Double precio = getDoubleODefault(req, "precio");
+        String fabricante = getCadenaODefault(req, "fabricante");
 
-        ResultadoDeCreacion<Producto> producto = ProductoService.crearProducto(nombre, precio, idFabricante);
+        ProductoService.crearProducto(nombre, precio, fabricante)
+                .esCorrecto((producto) -> {
+                    prodDAO.create(producto);
+                    sendRedirectTo("/tienda/productos/", req, res);
+                })
+                .esIncorrecto((error) -> {
+                    try {
+                        res.sendError(400, error.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
-        if (producto.esValido() && codigo != 0) {
-            producto.get().setIdProducto(codigo);
-            prodDAO.update(producto.get());
-        }
     }
 
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
-        RequestDispatcher dispatcher;
+    private void modificarProducto(HttpServletRequest req, HttpServletResponse res) {
+        ProductoDAO prodDAO = new ProductoDAOImpl();
+
+        int codigo = getIntegerODefault(req, "codigo");
+        String nombre = getCadenaODefault(req, "nombre");
+        Double precio = getDoubleODefault(req, "precio");
+        Integer idFabricante = getIntegerODefault(req, "fabricante");
+
+        ProductoService.crearProducto(nombre, precio, idFabricante)
+                .esCorrecto((producto) -> {
+                    if (codigo > 0) {
+                        producto.setIdProducto(codigo);
+                        prodDAO.update(producto);
+                    }
+                    sendRedirectTo("/tienda/productos/", req, res);
+                })
+                .esIncorrecto((error) -> {
+                    try {
+                        res.sendError(400, error.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+    }
+
+    private void eliminarProducto(HttpServletRequest req, HttpServletResponse res) {
         ProductoDAO fabDAO = new ProductoDAOImpl();
-        String codigo = request.getParameter("codigo");
+        int codigo = getIntegerODefault(req, "codigo");
 
-        try {
-
-            int id = Integer.parseInt(codigo);
-
-            fabDAO.delete(id);
-
-        } catch (NumberFormatException nfe) {
-            nfe.printStackTrace();
-        }
+        fabDAO.find(codigo)
+                .ifPresentOrElse((p) -> {
+                    fabDAO.delete(codigo);
+                    sendRedirectTo("/tienda/productos/", req, res);
+                },
+                        () -> {
+                            try {
+                                res.sendError(400, "No se ha eliminado el producto");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
     }
 }

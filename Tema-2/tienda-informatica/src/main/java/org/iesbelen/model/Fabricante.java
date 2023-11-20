@@ -1,8 +1,6 @@
 package org.iesbelen.model;
 
 
-import java.util.Collection;
-
 public class Fabricante {
 
     private int idFabricante;

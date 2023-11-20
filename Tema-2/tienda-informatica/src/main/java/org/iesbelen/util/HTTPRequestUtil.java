@@ -50,8 +50,10 @@ public class HTTPRequestUtil {
         }
     }
 
-    public static void manejarRequest(HttpServletRequest req, HttpServletResponse res,
-            Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> routes) {
+    public static void manejarRequest(
+            HttpServletRequest req,
+            HttpServletResponse res,
+            Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutas) {
 
         String path = req.getRequestURI().substring(req.getContextPath().length());
 
@@ -59,9 +61,8 @@ public class HTTPRequestUtil {
             path += "/";
         }
 
-        encontrarManejador(path, routes)
-                .ifPresentOrElse(
-                        (ruta) -> ruta.accept(req, res),
+        encontrarManejador(path, rutas)
+                .ifPresentOrElse((manejador) -> manejador.accept(req, res),
                         () -> {
                             try {
                                 res.sendError(404, "No se ha encontrado la ruta solicitada");
@@ -72,8 +73,8 @@ public class HTTPRequestUtil {
     }
 
     private static Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> encontrarManejador(
-            String path, Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> routes) {
-        return routes.entrySet().stream()
+            String path, Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutas) {
+        return rutas.entrySet().stream()
                 .filter(entry -> path.matches(entry.getKey()))
                 .findFirst()
                 .map(Map.Entry::getValue);
