@@ -22,7 +22,7 @@
         <% }
 
             if (estaLogeado && "Administrador".equals(usuario.getRol()) ||
-                    estaLogeado && ("idFabricante".equals(idPropertyName) || "idProducto".equals(idPropertyName)) && "Vendedor".equals(usuario.getRol())) { %>
+                    (estaLogeado && "idProducto".equals(idPropertyName)) && "Vendedor".equals(usuario.getRol())) { %>
         <th></th>
         <% }%>
 
@@ -41,7 +41,7 @@
         <% }
 
             if (estaLogeado && "Administrador".equals(usuario.getRol()) ||
-                    estaLogeado && ("idFabricante".equals(idPropertyName) || "idProducto".equals(idPropertyName)) && "Vendedor".equals(usuario.getRol())) {
+                    (estaLogeado && "idProducto".equals(idPropertyName)) && "Vendedor".equals(usuario.getRol())) {
         %>
         <td>
             <div class="wrapper">

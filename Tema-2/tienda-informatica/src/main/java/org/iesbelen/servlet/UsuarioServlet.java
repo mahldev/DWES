@@ -1,78 +1,68 @@
 package org.iesbelen.servlet;
 
-import static java.util.Objects.isNull;
-import static org.iesbelen.util.HTTPRequestUtil.*;
+import static org.iesbelen.util.HttpRequestUtils.*;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
 import org.iesbelen.dao.UsuarioDAO;
 import org.iesbelen.dao.UsuarioDAOImpl;
 import org.iesbelen.model.Usuario;
+import org.iesbelen.util.Enrutador;
 import org.iesbelen.util.ResultadoDeCreacion;
 
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.HttpMethod;
 
 @WebServlet(name = "usuarioServlet", value = "/tienda/usuarios/*")
 public class UsuarioServlet extends HttpServlet {
 
-    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasGET = new HashMap<>();
-    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasPOST = new HashMap<>();
-    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasPUT = new HashMap<>();
-    Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasDELETE = new HashMap<>();
+    private static final long serialVersionUID = 1L;
+
+    Enrutador enrutador;
 
     @Override
     public void init() {
-        // GET
-        rutasGET.put("/tienda/usuarios/", this::mostrarUsuarios);
-        rutasGET.put("/tienda/usuarios/editar/\\d+/?", this::devolverUsuario);
-        rutasGET.put("/tienda/usuarios/crear/",
+        enrutador = new Enrutador();
+
+        enrutador.addRuta(HttpMethod.GET, "/tienda/usuarios/", this::mostrarUsuarios);
+        enrutador.addRuta(HttpMethod.GET, "/tienda/usuarios/editar/\\d+/?", this::devolverUsuario);
+        enrutador.addRuta(
+                HttpMethod.GET,
+                "/tienda/usuarios/crear/",
                 (req, res) -> forwardToJsp("/WEB-INF/jsp/usuarios/crear-usuario.jsp", req, res));
-        rutasGET.put("/tienda/usuarios/editar/",
+        enrutador.addRuta(
+                HttpMethod.GET,
+                "/tienda/usuarios/editar/",
                 (req, res) -> forwardToJsp("/WEB-INF/jsp/usuarios/editar-usuario.jsp", req, res));
 
-        // POST
-        rutasPOST.put("/tienda/usuarios/", this::crearUsuario);
+        enrutador.addRuta(HttpMethod.POST, "/tienda/usuarios/", this::crearUsuario);
 
-        // PUT
-        rutasPUT.put("/tienda/usuarios/\\d+/?", this::actualizarUsuario);
+        enrutador.addRuta(HttpMethod.PUT, "/tienda/usuarios/\\d+/?", this::actualizarUsuario);
 
-        // DELETE
-        rutasDELETE.put("/tienda/usuarios/borrar/", this::borrarUsuario);
+        enrutador.addRuta(HttpMethod.DELETE, "/tienda/usuarios/borrar/", this::borrarUsuario);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, rutasGET);
+        enrutador.manejarRequest(req, res);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) {
-        String __method__ = req.getParameter("__method__");
-
-        if (isNull(__method__))
-            manejarRequest(req, res, rutasPOST);
-
-        if ("put".equals(__method__))
-            doPut(req, res);
-
-        if ("delete".equals(__method__))
-            doDelete(req, res);
+        enrutador.manejarRequest(req, res);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, rutasPUT);
+        enrutador.manejarRequest(req, res);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, rutasDELETE);
+        enrutador.manejarRequest(req, res);
     }
 
     private void mostrarUsuarios(HttpServletRequest req, HttpServletResponse res) {

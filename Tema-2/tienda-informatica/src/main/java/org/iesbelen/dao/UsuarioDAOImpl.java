@@ -9,13 +9,12 @@ import java.util.Optional;
 
 public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
 
-
     @Override
     public void create(Usuario usuario) {
         String sql = "INSERT INTO usuarios (usuario, password, rol) VALUES (?, ?, ?)";
 
         try (Connection conn = connectDB();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             int index = 1;
 
             ps.setString(index++, usuario.getUsuario());
@@ -35,8 +34,8 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
         List<Usuario> usuarioList = new ArrayList<>();
 
         try (Connection conn = connectDB();
-             Statement s = conn.createStatement();
-             ResultSet rs = s.executeQuery(sql)) {
+                Statement s = conn.createStatement();
+                ResultSet rs = s.executeQuery(sql)) {
 
             while (rs.next()) {
                 Usuario usuario = crearUsuario(rs);
@@ -56,7 +55,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
         String sql = "SELECT * FROM usuarios WHERE idUsuario = ?";
 
         try (Connection conn = connectDB();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
 
@@ -79,10 +78,10 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
         String sql = "SELECT * FROM usuarios WHERE usuario = ?";
 
         try (Connection conn = connectDB();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, nombre);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next())
                     return Optional.of(crearUsuario(rs));
@@ -95,13 +94,12 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
         return Optional.empty();
     }
 
-
     @Override
     public void update(Usuario usuario) {
 
         String sql = """
                 UPDATE usuarios
-                SET 
+                SET
                     idUsuario = ?,
                     usuario = ?,
                     password = ?,
@@ -110,7 +108,7 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
                 """;
 
         try (Connection conn = connectDB();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             int index = 1;
 
@@ -127,14 +125,13 @@ public class UsuarioDAOImpl extends AbstractDAOImpl implements UsuarioDAO {
         }
     }
 
-
     @Override
     public void delete(int id) {
 
         String sql = "DELETE FROM usuarios WHERE idUsuario = ?";
 
         try (Connection conn = connectDB();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
 

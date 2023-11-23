@@ -17,7 +17,7 @@ public abstract class AbstractDAOImpl {
 	protected static String schema;
 	protected static String username;
 	protected static String password;
-	
+
 	static {
 		ResourceBundle bundle = ResourceBundle.getBundle("org.iesbelen.dao.database");
 		driverClassName = bundle.getString("jdbc.driverClassName");
@@ -27,21 +27,21 @@ public abstract class AbstractDAOImpl {
 		username = bundle.getString("jdbc.username");
 		password = bundle.getString("jdbc.password");
 	}
-	
-	
+
 	/**
 	 * Ejecuta un PreparedStatement de tipo insert.
+	 * 
 	 * @param ps de tipo insert
 	 * @return devuelve Optional de entero correspondiente al ID generado.
 	 * @throws SQLException
 	 */
 	protected Optional<Integer> executeInsert(PreparedStatement ps) throws SQLException {
-		
+
 		int rowNum = ps.executeUpdate();
 		if (rowNum == 0) {
 			System.out.println("Sentencia DML(INSERT, UPDATE o DELETE) cero filas actualizadas.");
 		}
-		
+
 		try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
 			if (generatedKeys.next()) {
 				return Optional.of(generatedKeys.getInt(1));
@@ -49,34 +49,35 @@ public abstract class AbstractDAOImpl {
 				System.out.println("Sentencia no genera ID .");
 				return Optional.empty();
 			}
-		} catch(SQLFeatureNotSupportedException e) {
+		} catch (SQLFeatureNotSupportedException e) {
 			e.printStackTrace();
 			return Optional.empty();
 		}
-		
+
 	}
-	
-	protected void executeUpdate(PreparedStatement ps) throws SQLException  {
+
+	protected void executeUpdate(PreparedStatement ps) throws SQLException {
 		int rowNum = ps.executeUpdate();
 		if (rowNum == 0) {
 			System.out.println("Sentencia DML(INSERT, UPDATE o DELETE) con cero filas actualizadas.");
 		}
 	}
-	
+
 	protected PreparedStatement prepareStmtGeneratedKeys(Connection conn, String query) throws SQLException {
 		return conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 	}
-	
-	protected PreparedStatement prepareStmtGeneratedKeys(Connection conn, String query,String[] indexNames) throws SQLException {
+
+	protected PreparedStatement prepareStmtGeneratedKeys(Connection conn, String query, String[] indexNames)
+			throws SQLException {
 		return conn.prepareStatement(query, indexNames);
 	}
-	
+
 	protected static Connection connectDB() throws ClassNotFoundException, SQLException {
 		Class.forName(driverClassName);
 		Connection conn = DriverManager.getConnection(schemaUrl, username, password);
 		return conn;
 	}
-	
+
 	protected static void closeDb(Connection connection, Statement statement, ResultSet resultSet) {
 		if (resultSet != null)
 			try {
@@ -98,4 +99,3 @@ public abstract class AbstractDAOImpl {
 			}
 	}
 }
-

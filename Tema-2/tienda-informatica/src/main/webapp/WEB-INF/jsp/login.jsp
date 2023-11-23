@@ -100,7 +100,7 @@
 
 <main>
     <h2>Bienvenido</h2>
-    <form id="datos" action="${pageContext.request.contextPath}/tienda/login/login/" method="post">
+    <form id="datos" action="${pageContext.request.contextPath}/tienda/login" method="post">
 
         <label>Usuario
             <input type="text" name="usuario">

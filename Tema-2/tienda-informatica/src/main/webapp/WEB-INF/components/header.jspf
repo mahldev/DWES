@@ -12,7 +12,6 @@
             <li><a href="<%=basePath%>/productos/">Productos</a></li>
             <li><a href="<%=basePath%>/usuarios/">Usuarios</a></li>
         </ul>
-
         <div class="wrapper">
             <ul class="Nav-ul">
                 <% if (session.getAttribute("usuario") != null) { %>
@@ -25,7 +24,7 @@
             </ul>
         </div>
 
-        <form hidden id="iniciarSesion" action="<%=basePath%>/login/login/"></form>
-        <form hidden id="cerrarSesion" action="<%=basePath%>/login/logout/" method="post"></form>
+        <form hidden id="iniciarSesion" action="<%=basePath%>/login/"></form>
+        <form hidden id="cerrarSesion" action="<%=basePath%>/logout/" method="post"></form>
     </nav>
 </header>

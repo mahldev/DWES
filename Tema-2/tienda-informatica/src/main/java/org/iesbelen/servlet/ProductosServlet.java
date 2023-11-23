@@ -5,84 +5,68 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.HttpMethod;
+
 import org.iesbelen.dao.FabricanteDAO;
 import org.iesbelen.dao.FabricanteDAOImpl;
 import org.iesbelen.dao.ProductoDAO;
 import org.iesbelen.dao.ProductoDAOImpl;
 import org.iesbelen.model.Fabricante;
 import org.iesbelen.service.ProductoService;
-import org.iesbelen.util.HTTPRequestUtil;
+import org.iesbelen.util.Enrutador;
+import org.iesbelen.util.HttpRequestUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
-import static org.iesbelen.util.HTTPRequestUtil.*;
+import static org.iesbelen.util.HttpRequestUtils.*;
 
 @WebServlet(name = "productosServlet", value = "/tienda/productos/*")
 public class ProductosServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasGET = new HashMap<>();
-    private Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasPOST = new HashMap<>();
-    private Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasPUT = new HashMap<>();
-    private Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutasDELETE = new HashMap<>();
+    private Enrutador enrutador;
 
     @Override
     public void init() {
-        // GET
-        rutasGET.put("/tienda/productos/", this::mostrarProductos);
-        rutasGET.put("/tienda/productos/editar/\\d+/?", this::devolverProducto);
-        rutasGET.put("/tienda/productos/crear/", this::devolverJSPCrearProducto);
+        enrutador = new Enrutador();
+        enrutador.addRuta(HttpMethod.GET, "/tienda/productos/", this::mostrarProductos);
+        enrutador.addRuta(HttpMethod.GET, "/tienda/productos/editar/\\d+/?", this::devolverProducto);
+        enrutador.addRuta(HttpMethod.GET, "/tienda/productos/crear/", this::devolverJSPCrearProducto);
 
-        // POST
-        rutasPOST.put("/tienda/productos/", this::crearProducto);
+        enrutador.addRuta(HttpMethod.POST, "/tienda/productos/", this::crearProducto);
 
-        // PUT
-        rutasPUT.put("/tienda/productos/editar/", this::modificarProducto);
+        enrutador.addRuta(HttpMethod.PUT, "/tienda/productos/editar/", this::modificarProducto);
 
-        // DELETE
-        rutasDELETE.put("/tienda/productos/borrar/", this::eliminarProducto);
+        enrutador.addRuta(HttpMethod.DELETE, "/tienda/productos/borrar/", this::eliminarProducto);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, rutasGET);
+        enrutador.manejarRequest(req, res);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-
-        String __method__ = req.getParameter("__method__");
-
-        if (__method__ == null)
-            manejarRequest(req, res, rutasPOST);
-
-        if ("put".equalsIgnoreCase(__method__))
-            doPut(req, res);
-
-        if ("delete".equalsIgnoreCase(__method__))
-            doDelete(req, res);
+        enrutador.manejarRequest(req, res);
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, rutasPUT);
+        enrutador.manejarRequest(req, res);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse res) {
-        manejarRequest(req, res, rutasDELETE);
+        enrutador.manejarRequest(req, res);
     }
 
     private void mostrarProductos(HttpServletRequest req, HttpServletResponse res) {
         ProductoDAO fabDAO = new ProductoDAOImpl();
 
         String searchFormHidden = req.getParameter("searchFormHidden");
-        String nombreFiltro = HTTPRequestUtil.getCadenaODefault(req, "filtrar-por-nombre");
+        String nombreFiltro = HttpRequestUtils.getCadenaODefault(req, "filtrar-por-nombre");
 
         req.setAttribute("listaProductos", fabDAO.getAll(nombreFiltro));
         req.setAttribute("searchQuery", nombreFiltro);
