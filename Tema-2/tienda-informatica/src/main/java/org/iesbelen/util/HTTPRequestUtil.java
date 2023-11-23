@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -50,35 +51,7 @@ public class HTTPRequestUtil {
         }
     }
 
-    public static void manejarRequest(
-            HttpServletRequest req,
-            HttpServletResponse res,
-            Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutas) {
-
-        String path = req.getRequestURI().substring(req.getContextPath().length());
-
-        if (!path.endsWith("/")) {
-            path += "/";
-        }
-
-        encontrarManejador(path, rutas)
-                .ifPresentOrElse((manejador) -> manejador.accept(req, res),
-                        () -> {
-                            try {
-                                res.sendError(404, "No se ha encontrado la ruta solicitada");
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        });
-    }
-
-    private static Optional<BiConsumer<HttpServletRequest, HttpServletResponse>> encontrarManejador(
-            String path, Map<String, BiConsumer<HttpServletRequest, HttpServletResponse>> rutas) {
-        return rutas.entrySet().stream()
-                .filter(entry -> path.matches(entry.getKey()))
-                .findFirst()
-                .map(Map.Entry::getValue);
-    }
+    
 
     public static void sendToReferer(HttpServletRequest req, HttpServletResponse res) {
         String referer = req.getHeader("Referer").replace("?", "");
@@ -89,6 +62,18 @@ public class HTTPRequestUtil {
         try {
             res.sendRedirect(currentUrl.equals(referer) ? req.getContextPath().concat("/") : referer);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T> Optional<T> recuperarSesion(HttpServletRequest req, String nombre) {
+        return Optional.ofNullable(req.getSession().getAttribute(nombre)).map(object -> (T) object);
+    }
+
+    public static void ejecutarRequest(HttpServletRequest req, HttpServletResponse res, FilterChain chain) {
+        try {
+            chain.doFilter(req, res);
+        } catch (IOException | ServletException e) {
             e.printStackTrace();
         }
     }

@@ -10,9 +10,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class Usuario {
-
 
     private int idUsuario;
     private String usuario;
@@ -20,16 +20,15 @@ public class Usuario {
     private String rol;
 
     public static ResultadoDeCreacion<Usuario> login(String usuario,
-                                                     String password) {
+            String password) {
         UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
         Optional<Usuario> user = usuarioDAO.findByName(usuario);
         return new ResultadoDeCreacion<>(user.orElse(new Usuario()), validarLogin(user, password));
     }
 
     public static ResultadoDeValidacion validarLogin(Optional<Usuario> usuario,
-                                                     String password) {
+            String password) {
         ResultadoDeValidacion res = new ResultadoDeValidacion();
-
 
         if (usuario.isEmpty()) {
             res.addError("usuarioNoExiste", "El usuario no existe en la base de datos");
@@ -77,8 +76,10 @@ public class Usuario {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Usuario usuario = (Usuario) o;
         return idUsuario == usuario.idUsuario;
     }
@@ -89,8 +90,8 @@ public class Usuario {
     }
 
     public static ResultadoDeValidacion validar(String nombre,
-                                                String password,
-                                                String rol) {
+            String password,
+            String rol) {
 
         ResultadoDeValidacion validaciones = new ResultadoDeValidacion();
 
@@ -101,8 +102,8 @@ public class Usuario {
     }
 
     public static ResultadoDeCreacion<Usuario> crearUsuario(String nombre,
-                                                            String password,
-                                                            String rol) {
+            String password,
+            String rol) {
 
         if (!"Administrador".equals(rol) && !"Vendedor".equals(rol)) {
             rol = "Cliente";
@@ -113,8 +114,7 @@ public class Usuario {
         usuario.setPassword(hashPassword(password));
         usuario.setRol(rol);
 
-        ResultadoDeValidacion resVal =
-                validar(nombre, password, rol);
+        ResultadoDeValidacion resVal = validar(nombre, password, rol);
 
         return new ResultadoDeCreacion<>(usuario, resVal);
     }
@@ -148,5 +148,27 @@ public class Usuario {
 
     }
 
+    public Usuario esAdministrador(Consumer<Usuario> esAdmin) {
+        if (this.rol.equals("Administrador")) {
+            esAdmin.accept(this);
+        }
 
+        return this;
+    }
+
+    public Usuario esVendedor(Consumer<Usuario> esAdmin) {
+        if (this.rol.equals("Administrador")) {
+            esAdmin.accept(this);
+        }
+
+        return this;
+    }
+
+    public Usuario esCliente(Consumer<Usuario> esAdmin) {
+        if (this.rol.equals("Administrador")) {
+            esAdmin.accept(this);
+        }
+
+        return this;
+    }
 }
